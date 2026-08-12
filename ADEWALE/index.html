@@ -9,18 +9,16 @@
 <style>
   :root{
     --nuit:#DAD4C6;
-    /* Ébène clair ajusté : luminosité baissée & opacité douce à 88% pour révéler l'objet 3D */
-    --ebene: rgba(222, 217, 207, 0.88);
-    --ebene-solid: #ded9cf;
+    --ebene:#EDEAE3;
     --terracotta:#C1562D;
     --or:#A9822E;
     --cauri:#241F1A;
     --vert:#3B4B3A;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:auto; background-color: #c8c2b5;}
+  html{scroll-behavior:auto;}
   body{
-    background: var(--ebene);
+    background:var(--ebene);
     color:var(--cauri);
     font-family:'Manrope',sans-serif;
     overflow-x:hidden;
@@ -60,7 +58,7 @@
   /* ---------- PRÉCHARGEMENT ---------- */
   #preloader{
     position:fixed;inset:0;
-    background:var(--ebene-solid);
+    background:var(--ebene);
     z-index:10000;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:32px;
@@ -70,24 +68,6 @@
   @keyframes spin-ikin{
     0%{transform:rotate(0deg) translateX(30px) rotate(0deg);}
     100%{transform:rotate(360deg) translateX(30px) rotate(-360deg);}
-  }
-  /* ---------- ACCENTS PAR SECTION ---------- */
-  section[data-accent="terracotta"] .eyebrow{color:var(--terracotta);}
-  section[data-accent="terracotta"] .eyebrow::before{background:var(--terracotta);}
-  section[data-accent="or"] .eyebrow{color:var(--or);}
-  section[data-accent="or"] .eyebrow::before{background:var(--or);}
-  section[data-accent="vert"] .eyebrow{color:#7A9678;}
-  section[data-accent="vert"] .eyebrow::before{background:#7A9678;}
-
-  /* ---------- RIDEAU DE TRANSITION ---------- */
-  #curtain{
-    position:fixed;inset:0;
-    z-index:50;
-    pointer-events:none;
-    background:var(--terracotta);
-    transform:scaleX(0);
-    transform-origin:left;
-    will-change:transform;
   }
   .odu-mark{width:10px;height:2px;background:rgba(36,31,26,0.15);transition:background .3s;}
   .odu-mark.lit{background:var(--or);}
@@ -121,13 +101,7 @@
   .eyebrow{
     font-size:13px;letter-spacing:0.2em;text-transform:uppercase;
     color:var(--terracotta);margin-bottom:20px;
-    display:flex;align-items:center;gap:12px;
   }
-  .eyebrow::before{
-    content:'';display:inline-block;width:0px;height:1px;background:var(--or);
-    transition:width .6s ease;
-  }
-  .eyebrow.in-view::before{width:32px;}
 
   #hero{align-items:flex-start;}
   #hero h1{
@@ -189,7 +163,7 @@
     nav{padding:20px 24px;}
     nav ul{display:none;}
     section{padding:0 24px;}
-    #scene-canvas{opacity:0.8;}
+    #scene-canvas{opacity:0.6;}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -207,8 +181,6 @@
   <div id="preloader-label">Consultation en préparation…</div>
 </div>
 
-<div id="curtain"></div>
-
 <canvas id="scene-canvas"></canvas>
 
 <nav>
@@ -223,14 +195,14 @@
 
 <main>
 
-  <section id="hero" data-accent="terracotta">
+  <section id="hero">
     <div class="eyebrow">L'étude du Fâ</div>
     <h1 class="js-split">Ce que vous cherchez<br>vous a déjà trouvé.</h1>
     <p class="sub">ADEWALE transmet la sagesse ancestrale du Fâ béninois — guidance, lecture des signes et accompagnement pour ceux qui cherchent à comprendre leur chemin.</p>
     <div class="scroll-cue"><div class="line"></div>Défiler pour entrer</div>
   </section>
 
-  <section id="desequilibre" data-accent="or">
+  <section id="desequilibre">
     <div class="section-inner">
       <div class="eyebrow">Le déséquilibre</div>
       <h2>Nous portons tous des questions que le monde visible ne peut résoudre seul.</h2>
@@ -238,7 +210,7 @@
     </div>
   </section>
 
-  <section id="savoir" data-accent="vert">
+  <section id="savoir">
     <div class="section-inner">
       <div class="eyebrow">Le savoir</div>
       <h2>Le Fâ est un système de connaissance, pas une superstition.</h2>
@@ -247,7 +219,7 @@
     </div>
   </section>
 
-  <section id="lecture" data-accent="terracotta">
+  <section id="lecture">
     <div class="section-inner">
       <div class="eyebrow">La lecture</div>
       <h2>Une consultation avec ADEWALE suit un protocole précis et respecté.</h2>
@@ -255,7 +227,7 @@
     </div>
   </section>
 
-  <section id="preuves" data-accent="or">
+  <section id="preuves">
     <div class="section-inner">
       <div class="eyebrow">Ce qu'ils en disent</div>
       <div class="temoignage">« Une lecture d'une justesse déconcertante — j'ai compris ce que je fuyais depuis des mois. »</div>
@@ -263,7 +235,7 @@
     </div>
   </section>
 
-  <section id="cta" data-accent="vert">
+  <section id="cta">
     <div class="section-inner">
       <div class="eyebrow">La consultation</div>
       <h2>Le plateau attend votre question.</h2>
@@ -329,7 +301,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
 camera.position.set(0, 1.4, 6);
 
-// ---- Groupe plateau + ikin ----
+// ---- Groupe plateau + ikin : rempli soit par les GLB réels, soit par le repli procédural ----
 const plateau = new THREE.Group();
 scene.add(plateau);
 let ikinMesh = null;
@@ -357,9 +329,14 @@ function buildFallbackIkin(){
   scene.add(ikinMesh);
 }
 
+// Le repli s'affiche immédiatement — la scène n'est jamais vide, même si le CDN
+// des loaders ou le fichier GLB ne sont pas joignables dans l'environnement d'aperçu.
 buildFallbackPlateau();
 buildFallbackIkin();
 
+// Chargement des vrais modèles sculptés — remplace les fichiers dans /assets/models/
+// En cas de succès, ils remplacent le repli ci-dessus. En cas d'échec (CDN bloqué,
+// fichier absent, etc.), le repli déjà affiché reste simplement en place.
 try{
   if(typeof THREE.GLTFLoader === 'function'){
     const dracoLoader = new THREE.DRACOLoader();
@@ -422,7 +399,7 @@ function animate(t){
 
   plateau.rotation.y += 0.0015;
 
-  // Parallax souris
+  // Parallax souris (léger, amorti)
   camera.position.x += (mouseX*0.6 - camera.position.x*0.05)*0.05;
   camera.position.y += (1.4 - mouseY*0.4 - camera.position.y)*0.03;
   camera.lookAt(0,0,0);
@@ -497,59 +474,6 @@ function initReveal(){
     gsap.to(el, {
       opacity:1, y:0, duration:0.8, ease:'power3.out',
       scrollTrigger:{trigger:el, start:'top 90%'}
-    });
-  });
-
-  /* ---- Transitions d'entrée par section ---- */
-  gsap.utils.toArray('section').forEach(section=>{
-    const isHero = section.id === 'hero';
-    const eyebrow = section.querySelectorAll('.eyebrow');
-    const targets = section.querySelectorAll('p, .temoignage, .btn');
-    gsap.set([...eyebrow, ...targets], {opacity:0, y:24});
-
-    const tl = gsap.timeline({
-      scrollTrigger: isHero ? undefined : {
-        trigger: section,
-        start: 'top 72%'
-      }
-    });
-    tl.to(eyebrow, {
-      opacity:1, y:0, duration:0.6, ease:'power2.out',
-      onStart:()=> eyebrow.forEach(e=>e.classList.add('in-view'))
-    })
-    .to(targets, {
-      opacity:1, y:0, duration:0.8, ease:'power3.out', stagger:0.1
-    }, isHero ? '-=0.3' : '-=0.35');
-  });
-
-  /* ---- Transition de fond fluide ---- */
-  gsap.to('body', {
-    backgroundColor: 'rgba(218, 212, 198, 0.92)',
-    ease:'none',
-    scrollTrigger:{
-      trigger:'#preuves',
-      start:'bottom bottom',
-      end:'bottom top',
-      scrub:1
-    }
-  });
-
-  /* ---- Rideau de transition ---- */
-  const accentColors = {terracotta:'#C1562D', or:'#A9822E', vert:'#3B4B3A'};
-  const curtain = document.getElementById('curtain');
-  gsap.utils.toArray('section').forEach((section, i)=>{
-    if(i === 0) return;
-    const color = accentColors[section.dataset.accent] || accentColors.terracotta;
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 65%',
-      onEnter: ()=>{
-        gsap.timeline()
-          .set(curtain, {backgroundColor:color, transformOrigin:'left', scaleX:0})
-          .to(curtain, {scaleX:1, duration:0.35, ease:'power2.in'})
-          .set(curtain, {transformOrigin:'right'})
-          .to(curtain, {scaleX:0, duration:0.5, ease:'power2.out'});
-      }
     });
   });
 }
