@@ -8,12 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --nuit:#E5E1D8;       /* Ébène clair légèrement soutenu */
-    --ebene:#F5F3EE;      /* Ébène clair principal (Fond lumineux et doux) */
+    --nuit:#DCD7CC;       
+    --ebene:#E8E4DC;      /* Fond ébène clair doux */
     --terracotta:#C1562D;
     --or:#A9822E;
-    --cauri:#1A1714;     /* Noir ébène profond pour les titres et contours */
-    --texte-sub:#524C46; /* Gris-brun chaud pour les paragraphes */
+    --cauri:#1A1714;     
+    --texte-sub:#4E4842; 
     --vert:#3B4B3A;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -39,6 +39,7 @@
     width:100vw;height:100vh;
     z-index:1;
     pointer-events:none;
+    opacity:1; /* Visibilité maximale de la scène 3D */
   }
 
   #cursor{
@@ -153,11 +154,11 @@
   }
   #savoir .odu-glyph{
     aspect-ratio:1;border:1px solid rgba(169,130,46,0.3);
-    background:rgba(255,255,255,0.4);
+    background:rgba(255,255,255,0.45);
     display:flex;align-items:center;justify-content:center;
     font-family:'Fraunces',serif;font-size:14px;color:var(--or);
     opacity:0;transform:translateY(12px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
   }
 
   #preuves{align-items:flex-end;text-align:right;}
@@ -186,7 +187,7 @@
     nav{padding:20px 24px;}
     nav ul{display:none;}
     section{padding:0 24px;}
-    #scene-canvas{opacity:0.6;}
+    #scene-canvas{opacity:0.85;}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -324,32 +325,31 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
-camera.position.set(0, 1.4, 6);
+camera.position.set(0, 1.3, 5.2); // Caméra légèrement rapprochée pour plus de visibilité
 
 const plateau = new THREE.Group();
 scene.add(plateau);
 let ikinMesh = null;
 const dummy = new THREE.Object3D();
 const ikinCount = 16;
-const ikinRadius = 2.6;
+const ikinRadius = 2.5;
 
 function buildFallbackPlateau(){
   const geo = new THREE.CylinderGeometry(2, 2.1, 0.15, 48, 1);
-  // Matériau ajusté pour le thème ébène clair (bois chaleureux et lumineux)
-  const mat = new THREE.MeshStandardMaterial({color:0x8C7A6B, roughness:0.55, metalness:0.15});
+  const mat = new THREE.MeshStandardMaterial({color:0x6B5B4E, roughness:0.45, metalness:0.2});
   const mesh = new THREE.Mesh(geo, mat);
   plateau.add(mesh);
 
-  const rimGeo = new THREE.TorusGeometry(2.05, 0.03, 16, 64);
-  const rimMat = new THREE.MeshStandardMaterial({color:0xA9822E, roughness:0.3, metalness:0.6});
+  const rimGeo = new THREE.TorusGeometry(2.05, 0.035, 16, 64);
+  const rimMat = new THREE.MeshStandardMaterial({color:0xC49938, roughness:0.25, metalness:0.75});
   const rim = new THREE.Mesh(rimGeo, rimMat);
   rim.rotation.x = Math.PI/2;
   mesh.add(rim);
 }
 
 function buildFallbackIkin(){
-  const geo = new THREE.SphereGeometry(0.06, 12, 12);
-  const mat = new THREE.MeshStandardMaterial({color:0x3A322B, roughness:0.4});
+  const geo = new THREE.SphereGeometry(0.065, 14, 14);
+  const mat = new THREE.MeshStandardMaterial({color:0x2C241E, roughness:0.35, metalness:0.3});
   ikinMesh = new THREE.InstancedMesh(geo, mat, ikinCount);
   scene.add(ikinMesh);
 }
@@ -369,11 +369,11 @@ try{
       (gltf)=>{
         const model = gltf.scene;
         model.rotation.x = -Math.PI / 2;
-        model.scale.setScalar(2);
+        model.scale.setScalar(2.1);
         model.traverse(n=>{
           if(n.isMesh){
             if(!n.geometry.attributes.normal) n.geometry.computeVertexNormals();
-            n.material.roughness = 0.65;
+            n.material.roughness = 0.5;
             n.material.side = THREE.DoubleSide;
           }
         });
@@ -390,16 +390,20 @@ try{
   console.warn('Erreur au chargement du GLB, repli conservé :', err);
 }
 
-// Lumières réajustées pour faire ressortir les volumes sur un fond clair
-const key = new THREE.PointLight(0xFFE2C4, 6, 20);
-key.position.set(3, 4, 3);
+/* ============ ÉCLAIRAGE HAUTE VISIBILITÉ ============ */
+const key = new THREE.PointLight(0xFFF0E0, 6.5, 25); // Lumière clé renforcée
+key.position.set(3.5, 4.5, 3.5);
 scene.add(key);
 
-const rimLight = new THREE.PointLight(0xA9822E, 3, 15);
-rimLight.position.set(-3, 1, -3);
+const rimLight = new THREE.PointLight(0xD8A838, 3.5, 18); // Accentuation dorée sur les bords
+rimLight.position.set(-3.5, 1.5, -3);
 scene.add(rimLight);
 
-const ambient = new THREE.AmbientLight(0xFFF8EF, 1.2);
+const fillLight = new THREE.PointLight(0xFFFFFF, 2.0, 15); // Lumière d'appoint débouchant les ombres
+fillLight.position.set(0, -2, 4);
+scene.add(fillLight);
+
+const ambient = new THREE.AmbientLight(0xFFFAED, 1.1); // Éclairage ambiant relevé
 scene.add(ambient);
 
 let mouseX = 0, mouseY = 0;
@@ -422,7 +426,7 @@ function animate(t){
   plateau.rotation.y += 0.0015;
 
   camera.position.x += (mouseX*0.6 - camera.position.x*0.05)*0.05;
-  camera.position.y += (1.4 - mouseY*0.4 - camera.position.y)*0.03;
+  camera.position.y += (1.3 - mouseY*0.4 - camera.position.y)*0.03;
   camera.lookAt(0,0,0);
 
   renderer.render(scene, camera);
@@ -437,7 +441,7 @@ window.addEventListener('resize', ()=>{
 
 /* ============ SCROLL : ANIMATION 3D ============ */
 gsap.to(camera.position, {
-  z: -8, y: 0.3,
+  z: -7.5, y: 0.3,
   ease:'none',
   scrollTrigger:{
     trigger:'#desequilibre',
@@ -519,9 +523,8 @@ function initReveal(){
     }, isHero ? '-=0.3' : '-=0.35');
   });
 
-  // Transition de couleur douce d'arrière-plan au scroll (garde la teinte ébène clair)
   gsap.to('body', {
-    backgroundColor: '#E8E4DB',
+    backgroundColor: '#DDD8CE',
     ease:'none',
     scrollTrigger:{
       trigger:'#preuves',
