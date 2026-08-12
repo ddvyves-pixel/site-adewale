@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADEWALE — L'étude du Fâ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --nuit:#161229;
+    --ebene:#0D0B0F;
+    --terracotta:#C1562D;
+    --or:#C9A15A;
+    --cauri:#F3EDE1;
+    --vert:#3B4B3A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:auto;}
+  body{
+    background:var(--ebene);
+    color:var(--cauri);
+    font-family:'Manrope',sans-serif;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  ::selection{background:var(--terracotta);color:var(--cauri);}
+
+  h1,h2,.display{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    letter-spacing:-0.01em;
+  }
+
+  /* ---------- CANVAS 3D ---------- */
+  #scene-canvas{
+    position:fixed;
+    top:0;left:0;
+    width:100vw;height:100vh;
+    z-index:1;
+    pointer-events:none;
+  }
+
+  /* ---------- CURSEUR ---------- */
+  #cursor{
+    position:fixed;
+    width:14px;height:14px;
+    border:1.5px solid var(--or);
+    border-radius:2px;
+    transform:rotate(45deg);
+    pointer-events:none;
+    z-index:9999;
+    transition:transform .3s ease, opacity .3s ease;
+    mix-blend-mode:difference;
+  }
+  #cursor.hover{transform:rotate(45deg) scale(1.8);}
+
+  /* ---------- PRÉCHARGEMENT ---------- */
+  #preloader{
+    position:fixed;inset:0;
+    background:var(--ebene);
+    z-index:10000;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:32px;
+  }
+  #preloader .ikin{width:10px;height:10px;border-radius:50%;background:var(--nuit);
+    animation:spin-ikin 3s linear infinite;}
+  @keyframes spin-ikin{
+    0%{transform:rotate(0deg) translateX(30px) rotate(0deg);}
+    100%{transform:rotate(360deg) translateX(30px) rotate(-360deg);}
+  }
+  #odu-track{display:flex;gap:6px;}
+  .odu-mark{width:10px;height:2px;background:rgba(243,237,225,0.15);transition:background .3s;}
+  .odu-mark.lit{background:var(--or);}
+  #preloader-label{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(243,237,225,0.5);}
+
+  /* ---------- CONTENU / SECTIONS ---------- */
+  main{position:relative;z-index:2;}
+  nav{
+    position:fixed;top:0;left:0;width:100%;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:28px 48px;z-index:100;
+    mix-blend-mode:difference;
+  }
+  nav .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.02em;}
+  nav ul{list-style:none;display:flex;gap:36px;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
+  nav a{color:var(--cauri);text-decoration:none;position:relative;}
+  nav a::after{
+    content:'';position:absolute;left:0;bottom:-4px;width:100%;height:1px;
+    background:var(--or);transform:scaleX(0);transform-origin:center;
+    transition:transform .3s ease;
+  }
+  nav a:hover::after{transform:scaleX(1);}
+
+  section{
+    min-height:100vh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:0 48px;
+    position:relative;
+  }
+
+  .eyebrow{
+    font-size:13px;letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--terracotta);margin-bottom:20px;
+  }
+
+  #hero{align-items:flex-start;}
+  #hero h1{
+    font-size:clamp(48px,8vw,120px);
+    line-height:0.95;
+    max-width:900px;
+  }
+  #hero .sub{
+    margin-top:28px;font-size:18px;max-width:480px;
+    color:rgba(243,237,225,0.75);font-weight:300;
+  }
+  .scroll-cue{
+    position:absolute;bottom:48px;left:48px;
+    font-size:12px;letter-spacing:0.1em;text-transform:uppercase;
+    color:rgba(243,237,225,0.5);
+    display:flex;align-items:center;gap:10px;
+  }
+  .scroll-cue .line{width:1px;height:32px;background:var(--or);
+    animation:pulse-line 2s ease-in-out infinite;}
+  @keyframes pulse-line{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+  .section-inner{max-width:640px;}
+  section h2{font-size:clamp(32px,5vw,56px);line-height:1.05;margin-bottom:24px;}
+  section p{font-size:17px;line-height:1.7;color:rgba(243,237,225,0.75);font-weight:300;}
+
+  #savoir .constellation{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+    max-width:400px;margin-top:40px;
+  }
+  #savoir .odu-glyph{
+    aspect-ratio:1;border:1px solid rgba(201,161,90,0.25);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-size:14px;color:var(--or);
+    opacity:0;transform:translateY(12px);
+  }
+
+  #preuves{align-items:flex-end;text-align:right;}
+  #preuves .section-inner{margin-left:auto;}
+  .temoignage{
+    border-top:1px solid rgba(243,237,225,0.15);
+    padding:20px 0;font-family:'Fraunces',serif;font-size:20px;font-weight:300;
+    font-style:italic;
+  }
+
+  #cta{align-items:center;text-align:center;background:var(--nuit);}
+  #cta .section-inner{max-width:560px;margin:0 auto;}
+  .btn{
+    display:inline-flex;align-items:center;gap:12px;
+    margin-top:36px;padding:16px 36px;
+    background:var(--terracotta);color:var(--cauri);
+    border:none;border-radius:2px;
+    font-family:'Manrope',sans-serif;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;
+    cursor:none;position:relative;overflow:hidden;
+  }
+
+  .reveal-char{display:inline-block;opacity:0;transform:translateY(20px);}
+
+  @media (max-width:768px){
+    nav{padding:20px 24px;}
+    nav ul{display:none;}
+    section{padding:0 24px;}
+    #scene-canvas{opacity:0.6;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    * {animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<div id="preloader">
+  <div class="ikin"></div>
+  <div id="odu-track"></div>
+  <div id="preloader-label">Consultation en préparation…</div>
+</div>
+
+<canvas id="scene-canvas"></canvas>
+
+<nav>
+  <div class="logo">ADEWALE</div>
+  <ul>
+    <li><a href="#savoir">Le savoir</a></li>
+    <li><a href="#lecture">La lecture</a></li>
+    <li><a href="#preuves">Témoignages</a></li>
+    <li><a href="#cta">Consultation</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <section id="hero">
+    <div class="eyebrow">L'étude du Fâ</div>
+    <h1 class="js-split">Ce que vous cherchez<br>vous a déjà trouvé.</h1>
+    <p class="sub">ADEWALE transmet la sagesse ancestrale du Fâ béninois — guidance, lecture des signes et accompagnement pour ceux qui cherchent à comprendre leur chemin.</p>
+    <div class="scroll-cue"><div class="line"></div>Défiler pour entrer</div>
+  </section>
+
+  <section id="desequilibre">
+    <div class="section-inner">
+      <div class="eyebrow">Le déséquilibre</div>
+      <h2>Nous portons tous des questions que le monde visible ne peut résoudre seul.</h2>
+      <p>Perte de repères, décisions à prendre, un chemin qui semble bloqué — le Fâ n'apporte pas de prédiction toute faite, il révèle l'équilibre à restaurer.</p>
+    </div>
+  </section>
+
+  <section id="savoir">
+    <div class="section-inner">
+      <div class="eyebrow">Le savoir</div>
+      <h2>Le Fâ est un système de connaissance, pas une superstition.</h2>
+      <p>Transmis oralement depuis des générations, il s'appuie sur 16 signes fondamentaux (odù), combinés en 256 figures, chacune porteuse d'un enseignement précis.</p>
+      <div class="constellation" id="constellation"></div>
+    </div>
+  </section>
+
+  <section id="lecture">
+    <div class="section-inner">
+      <div class="eyebrow">La lecture</div>
+      <h2>Une consultation avec ADEWALE suit un protocole précis et respecté.</h2>
+      <p>Interrogation du plateau, lecture des ikin, interprétation du signe obtenu à la lumière de votre question — un dialogue entre vous, le devin et la tradition.</p>
+    </div>
+  </section>
+
+  <section id="preuves">
+    <div class="section-inner">
+      <div class="eyebrow">Ce qu'ils en disent</div>
+      <div class="temoignage">« Une lecture d'une justesse déconcertante — j'ai compris ce que je fuyais depuis des mois. »</div>
+      <div class="temoignage">« ADEWALE explique chaque signe avec une clarté rare, sans mysticisme creux. »</div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="section-inner">
+      <div class="eyebrow">La consultation</div>
+      <h2>Le plateau attend votre question.</h2>
+      <p>Réservez une séance individuelle, en personne ou à distance.</p>
+      <button class="btn js-magnetic">Prendre rendez-vous</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ============ CURSEUR PERSONNALISÉ ============ */
+const cursor = document.getElementById('cursor');
+window.addEventListener('mousemove', e=>{
+  gsap.to(cursor,{x:e.clientX-7,y:e.clientY-7,duration:0.15,ease:'power2.out'});
+});
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));
+  el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));
+});
+
+/* ============ PRÉCHARGEMENT ============ */
+const track = document.getElementById('odu-track');
+for(let i=0;i<16;i++){
+  const m = document.createElement('div');
+  m.className='odu-mark';
+  track.appendChild(m);
+}
+let loaded = 0;
+const marks = document.querySelectorAll('.odu-mark');
+function fakeLoad(){
+  const interval = setInterval(()=>{
+    loaded++;
+    if(marks[loaded-1]) marks[loaded-1].classList.add('lit');
+    if(loaded>=16){
+      clearInterval(interval);
+      gsap.to('#preloader',{
+        opacity:0, scale:0.96, duration:0.6, ease:'expo.inOut',
+        onComplete:()=>{
+          document.getElementById('preloader').style.display='none';
+          initReveal();
+        }
+      });
+    }
+  }, 90);
+}
+window.addEventListener('load', fakeLoad);
+
+/* ============ SCÈNE 3D : PLATEAU DE FÂ ============ */
+const canvas = document.getElementById('scene-canvas');
+const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.set(0, 1.4, 6);
+
+// ---- Groupe plateau + ikin : rempli soit par les GLB réels, soit par le repli procédural ----
+const plateau = new THREE.Group();
+scene.add(plateau);
+let ikinMesh = null;
+const dummy = new THREE.Object3D();
+const ikinCount = 16;
+const ikinRadius = 2.6;
+
+function buildFallbackPlateau(){
+  const geo = new THREE.CylinderGeometry(2, 2.1, 0.15, 48, 1);
+  const mat = new THREE.MeshStandardMaterial({color:0x2a2340, roughness:0.55, metalness:0.15});
+  const mesh = new THREE.Mesh(geo, mat);
+  plateau.add(mesh);
+
+  const rimGeo = new THREE.TorusGeometry(2.05, 0.03, 16, 64);
+  const rimMat = new THREE.MeshStandardMaterial({color:0xC9A15A, roughness:0.3, metalness:0.6});
+  const rim = new THREE.Mesh(rimGeo, rimMat);
+  rim.rotation.x = Math.PI/2;
+  mesh.add(rim);
+}
+
+function buildFallbackIkin(){
+  const geo = new THREE.SphereGeometry(0.06, 12, 12);
+  const mat = new THREE.MeshStandardMaterial({color:0xF3EDE1, roughness:0.4});
+  ikinMesh = new THREE.InstancedMesh(geo, mat, ikinCount);
+  scene.add(ikinMesh);
+}
+
+// Le repli s'affiche immédiatement — la scène n'est jamais vide, même si le CDN
+// des loaders ou le fichier GLB ne sont pas joignables dans l'environnement d'aperçu.
+buildFallbackPlateau();
+buildFallbackIkin();
+
+// Chargement des vrais modèles sculptés — remplace les fichiers dans /assets/models/
+// En cas de succès, ils remplacent le repli ci-dessus. En cas d'échec (CDN bloqué,
+// fichier absent, etc.), le repli déjà affiché reste simplement en place.
+try{
+  if(typeof THREE.GLTFLoader === 'function'){
+    const dracoLoader = new THREE.DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    const gltfLoader = new THREE.GLTFLoader();
+    gltfLoader.setDRACOLoader(dracoLoader);
+
+    gltfLoader.load(
+      'assets/models/opon.glb',
+      (gltf)=>{
+        const model = gltf.scene;
+        model.rotation.x = -Math.PI / 2;
+        model.scale.setScalar(2);
+        model.traverse(n=>{
+          if(n.isMesh){
+            if(!n.geometry.attributes.normal) n.geometry.computeVertexNormals();
+            n.material.roughness = 0.72;
+            n.material.side = THREE.DoubleSide;
+          }
+        });
+        plateau.clear();
+        plateau.add(model);
+      },
+      undefined,
+      (err)=>{ console.warn('GLB opon.glb non chargé, repli conservé :', err); }
+    );
+  } else {
+    console.warn('THREE.GLTFLoader indisponible (CDN bloqué) — repli procédural conservé.');
+  }
+}catch(err){
+  console.warn('Erreur au chargement du GLB, repli conservé :', err);
+}
+
+// Lumières
+const key = new THREE.PointLight(0xffb37a, 8, 20);
+key.position.set(3, 3, 3);
+scene.add(key);
+const rimLight = new THREE.PointLight(0xC9A15A, 4, 15);
+rimLight.position.set(-3, 1, -3);
+scene.add(rimLight);
+const ambient = new THREE.AmbientLight(0x2a2340, 0.6);
+scene.add(ambient);
+
+let mouseX = 0, mouseY = 0;
+window.addEventListener('mousemove', e=>{
+  mouseX = (e.clientX/window.innerWidth - 0.5);
+  mouseY = (e.clientY/window.innerHeight - 0.5);
+});
+
+function animate(t){
+  requestAnimationFrame(animate);
+  const time = t*0.0002;
+  for(let i=0;i<ikinCount;i++){
+    const angle = time + (i/ikinCount)*Math.PI*2;
+    dummy.position.set(Math.cos(angle)*ikinRadius, 0.15+Math.sin(time*2+i)*0.05, Math.sin(angle)*ikinRadius*0.5);
+    dummy.updateMatrix();
+    ikinMesh.setMatrixAt(i, dummy.matrix);
+  }
+  ikinMesh.instanceMatrix.needsUpdate = true;
+
+  plateau.rotation.y += 0.0015;
+
+  // Parallax souris (léger, amorti)
+  camera.position.x += (mouseX*0.6 - camera.position.x*0.05)*0.05;
+  camera.position.y += (1.4 - mouseY*0.4 - camera.position.y)*0.03;
+  camera.lookAt(0,0,0);
+
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(animate);
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* ============ SCROLL : CAMÉRA TRAVERSE LE PORTAIL ============ */
+gsap.to(camera.position, {
+  z: -8, y: 0.3,
+  ease:'none',
+  scrollTrigger:{
+    trigger:'#desequilibre',
+    start:'top bottom',
+    end:'bottom top',
+    scrub:1
+  }
+});
+gsap.to(plateau.scale, {
+  x:2.4, y:2.4, z:2.4,
+  ease:'none',
+  scrollTrigger:{
+    trigger:'#desequilibre',
+    start:'top bottom',
+    end:'bottom top',
+    scrub:1
+  }
+});
+gsap.to('#scene-canvas', {
+  opacity:0,
+  ease:'none',
+  scrollTrigger:{
+    trigger:'#lecture',
+    start:'top center',
+    end:'bottom top',
+    scrub:1
+  }
+});
+
+/* ============ CONSTELLATION DES ODÙ ============ */
+const oduNames = ['Gbê-mêdji','Yêkou-mêdji','Woli-mêdji','Di-mêdji','Losso-mêdji','Winlin-mêdji','Abla-mêdji','Aklan-mêdji','Guda-mêdji','Sa-mêdji','Ka-mêdji','Trukpin-mêdji','Tula-mêdji','Lètè-mêdji','Tchê-mêdji','Fu-mêdji'];
+const constellation = document.getElementById('constellation');
+oduNames.forEach(name=>{
+  const el = document.createElement('div');
+  el.className='odu-glyph';
+  el.textContent = name;
+  constellation.appendChild(el);
+});
+gsap.to('#savoir .odu-glyph', {
+  opacity:1, y:0, duration:0.5, stagger:0.05, ease:'back.out(1.2)',
+  scrollTrigger:{trigger:'#savoir', start:'top 60%'}
+});
+
+/* ============ RÉVÉLATIONS DE TEXTE ============ */
+function initReveal(){
+  document.querySelectorAll('section h2, #hero h1').forEach(el=>{
+    const text = el.innerHTML;
+    const words = text.split(/(<br>)/).map(part=>{
+      if(part==='<br>') return part;
+      return part.split(' ').map(w=>`<span class="reveal-word" style="display:inline-block;overflow:hidden;"><span class="reveal-char" style="display:inline-block;">${w}&nbsp;</span></span>`).join('');
+    }).join('');
+    el.innerHTML = text.includes('<br>') ? words : words;
+  });
+  gsap.utils.toArray('.reveal-char').forEach(el=>{
+    gsap.to(el, {
+      opacity:1, y:0, duration:0.8, ease:'power3.out',
+      scrollTrigger:{trigger:el, start:'top 90%'}
+    });
+  });
+}
+
+/* ============ HOVER MAGNÉTIQUE ============ */
+document.querySelectorAll('.js-magnetic').forEach(btn=>{
+  const moveX = gsap.quickTo(btn,'x',{duration:0.4,ease:'power3'});
+  const moveY = gsap.quickTo(btn,'y',{duration:0.4,ease:'power3'});
+  btn.addEventListener('mousemove', e=>{
+    const r = btn.getBoundingClientRect();
+    moveX((e.clientX-r.left-r.width/2)*0.4);
+    moveY((e.clientY-r.top-r.height/2)*0.4);
+  });
+  btn.addEventListener('mouseleave', ()=>{ moveX(0); moveY(0); });
+});
+</script>
+</body>
+</html>
