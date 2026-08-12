@@ -8,11 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --nuit:#DAD4C6;
-    --ebene:#EDEAE3;
+    --nuit:#E5E1D8;       /* Ébène clair légèrement soutenu */
+    --ebene:#F5F3EE;      /* Ébène clair principal (Fond lumineux et doux) */
     --terracotta:#C1562D;
     --or:#A9822E;
-    --cauri:#241F1A;
+    --cauri:#1A1714;     /* Noir ébène profond pour les titres et contours */
+    --texte-sub:#524C46; /* Gris-brun chaud pour les paragraphes */
     --vert:#3B4B3A;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -24,7 +25,7 @@
     overflow-x:hidden;
     cursor:none;
   }
-  ::selection{background:var(--terracotta);color:var(--cauri);}
+  ::selection{background:var(--terracotta);color:#ffffff;}
 
   h1,h2,.display{
     font-family:'Fraunces',serif;
@@ -60,7 +61,7 @@
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:32px;
   }
-  #preloader .ikin{width:10px;height:10px;border-radius:50%;background:var(--nuit);
+  #preloader .ikin{width:10px;height:10px;border-radius:50%;background:var(--or);
     animation:spin-ikin 3s linear infinite;}
   @keyframes spin-ikin{
     0%{transform:rotate(0deg) translateX(30px) rotate(0deg);}
@@ -70,8 +71,8 @@
   section[data-accent="terracotta"] .eyebrow::before{background:var(--terracotta);}
   section[data-accent="or"] .eyebrow{color:var(--or);}
   section[data-accent="or"] .eyebrow::before{background:var(--or);}
-  section[data-accent="vert"] .eyebrow{color:#7A9678;}
-  section[data-accent="vert"] .eyebrow::before{background:#7A9678;}
+  section[data-accent="vert"] .eyebrow{color:#4E634D;}
+  section[data-accent="vert"] .eyebrow::before{background:#4E634D;}
 
   #curtain{
     position:fixed;inset:0;
@@ -82,20 +83,20 @@
     transform-origin:left;
     will-change:transform;
   }
-  .odu-mark{width:10px;height:2px;background:rgba(36,31,26,0.15);transition:background .3s;}
+  .odu-mark{width:10px;height:2px;background:rgba(26,23,20,0.12);transition:background .3s;}
   .odu-mark.lit{background:var(--or);}
-  #preloader-label{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(36,31,26,0.55);}
+  #preloader-label{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--texte-sub);}
 
   main{position:relative;z-index:2;}
   nav{
     position:fixed;top:0;left:0;width:100%;
-    display:flex;justify-content:space-between;align-items:center;
+    display:flex;justify-space-between;align-items:center;
     padding:28px 48px;z-index:100;
     mix-blend-mode:difference;
   }
-  nav .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.02em;}
+  nav .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.02em;color:#ffffff;}
   nav ul{list-style:none;display:flex;gap:36px;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
-  nav a{color:var(--cauri);text-decoration:none;position:relative;}
+  nav a{color:#ffffff;text-decoration:none;position:relative;}
   nav a::after{
     content:'';position:absolute;left:0;bottom:-4px;width:100%;height:1px;
     background:var(--or);transform:scaleX(0);transform-origin:center;
@@ -114,6 +115,7 @@
     font-size:13px;letter-spacing:0.2em;text-transform:uppercase;
     color:var(--terracotta);margin-bottom:20px;
     display:flex;align-items:center;gap:12px;
+    font-weight:600;
   }
   .eyebrow::before{
     content:'';display:inline-block;width:0px;height:1px;background:var(--or);
@@ -129,12 +131,12 @@
   }
   #hero .sub{
     margin-top:28px;font-size:18px;max-width:480px;
-    color:rgba(36,31,26,0.75);font-weight:300;
+    color:var(--texte-sub);font-weight:400;
   }
   .scroll-cue{
     position:absolute;bottom:48px;left:48px;
     font-size:12px;letter-spacing:0.1em;text-transform:uppercase;
-    color:rgba(36,31,26,0.55);
+    color:var(--texte-sub);
     display:flex;align-items:center;gap:10px;
   }
   .scroll-cue .line{width:1px;height:32px;background:var(--or);
@@ -143,25 +145,27 @@
 
   .section-inner{max-width:640px;}
   section h2{font-size:clamp(32px,5vw,56px);line-height:1.05;margin-bottom:24px;}
-  section p{font-size:17px;line-height:1.7;color:rgba(36,31,26,0.75);font-weight:300;}
+  section p{font-size:17px;line-height:1.7;color:var(--texte-sub);font-weight:400;}
 
   #savoir .constellation{
     display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
     max-width:400px;margin-top:40px;
   }
   #savoir .odu-glyph{
-    aspect-ratio:1;border:1px solid rgba(201,161,90,0.25);
+    aspect-ratio:1;border:1px solid rgba(169,130,46,0.3);
+    background:rgba(255,255,255,0.4);
     display:flex;align-items:center;justify-content:center;
     font-family:'Fraunces',serif;font-size:14px;color:var(--or);
     opacity:0;transform:translateY(12px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
   }
 
   #preuves{align-items:flex-end;text-align:right;}
   #preuves .section-inner{margin-left:auto;}
   .temoignage{
-    border-top:1px solid rgba(36,31,26,0.15);
+    border-top:1px solid rgba(26,23,20,0.12);
     padding:20px 0;font-family:'Fraunces',serif;font-size:20px;font-weight:300;
-    font-style:italic;
+    font-style:italic;color:var(--cauri);
   }
 
   #cta{align-items:center;text-align:center;}
@@ -169,10 +173,11 @@
   .btn{
     display:inline-flex;align-items:center;gap:12px;
     margin-top:36px;padding:16px 36px;
-    background:var(--terracotta);color:var(--cauri);
+    background:var(--terracotta);color:#ffffff;
     border:none;border-radius:2px;
     font-family:'Manrope',sans-serif;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;
     cursor:none;position:relative;overflow:hidden;
+    box-shadow: 0 6px 20px rgba(193,86,45,0.25);
   }
 
   .reveal-char{display:inline-block;opacity:0;transform:translateY(20px);}
@@ -330,12 +335,13 @@ const ikinRadius = 2.6;
 
 function buildFallbackPlateau(){
   const geo = new THREE.CylinderGeometry(2, 2.1, 0.15, 48, 1);
-  const mat = new THREE.MeshStandardMaterial({color:0x2a2340, roughness:0.55, metalness:0.15});
+  // Matériau ajusté pour le thème ébène clair (bois chaleureux et lumineux)
+  const mat = new THREE.MeshStandardMaterial({color:0x8C7A6B, roughness:0.55, metalness:0.15});
   const mesh = new THREE.Mesh(geo, mat);
   plateau.add(mesh);
 
   const rimGeo = new THREE.TorusGeometry(2.05, 0.03, 16, 64);
-  const rimMat = new THREE.MeshStandardMaterial({color:0xC9A15A, roughness:0.3, metalness:0.6});
+  const rimMat = new THREE.MeshStandardMaterial({color:0xA9822E, roughness:0.3, metalness:0.6});
   const rim = new THREE.Mesh(rimGeo, rimMat);
   rim.rotation.x = Math.PI/2;
   mesh.add(rim);
@@ -343,7 +349,7 @@ function buildFallbackPlateau(){
 
 function buildFallbackIkin(){
   const geo = new THREE.SphereGeometry(0.06, 12, 12);
-  const mat = new THREE.MeshStandardMaterial({color:0xF3EDE1, roughness:0.4});
+  const mat = new THREE.MeshStandardMaterial({color:0x3A322B, roughness:0.4});
   ikinMesh = new THREE.InstancedMesh(geo, mat, ikinCount);
   scene.add(ikinMesh);
 }
@@ -367,7 +373,7 @@ try{
         model.traverse(n=>{
           if(n.isMesh){
             if(!n.geometry.attributes.normal) n.geometry.computeVertexNormals();
-            n.material.roughness = 0.72;
+            n.material.roughness = 0.65;
             n.material.side = THREE.DoubleSide;
           }
         });
@@ -378,19 +384,22 @@ try{
       (err)=>{ console.warn('GLB opon.glb non chargé, repli conservé :', err); }
     );
   } else {
-    console.warn('THREE.GLTFLoader indisponible (CDN bloqué) — repli procédural conservé.');
+    console.warn('THREE.GLTFLoader indisponible — repli procédural conservé.');
   }
 }catch(err){
   console.warn('Erreur au chargement du GLB, repli conservé :', err);
 }
 
-const key = new THREE.PointLight(0xffb37a, 8, 20);
-key.position.set(3, 3, 3);
+// Lumières réajustées pour faire ressortir les volumes sur un fond clair
+const key = new THREE.PointLight(0xFFE2C4, 6, 20);
+key.position.set(3, 4, 3);
 scene.add(key);
-const rimLight = new THREE.PointLight(0xC9A15A, 4, 15);
+
+const rimLight = new THREE.PointLight(0xA9822E, 3, 15);
 rimLight.position.set(-3, 1, -3);
 scene.add(rimLight);
-const ambient = new THREE.AmbientLight(0x2a2340, 0.6);
+
+const ambient = new THREE.AmbientLight(0xFFF8EF, 1.2);
 scene.add(ambient);
 
 let mouseX = 0, mouseY = 0;
@@ -426,7 +435,7 @@ window.addEventListener('resize', ()=>{
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-/* ============ SCROLL : CAMÉRA TRAVERSE LE PORTAIL ============ */
+/* ============ SCROLL : ANIMATION 3D ============ */
 gsap.to(camera.position, {
   z: -8, y: 0.3,
   ease:'none',
@@ -472,7 +481,7 @@ gsap.to('#savoir .odu-glyph', {
   scrollTrigger:{trigger:'#savoir', start:'top 60%'}
 });
 
-/* ============ RÉVÉLATIONS DE TEXTE ============ */
+/* ============ RÉVÉLATIONS DE TEXTE & DÉFILEMENT ============ */
 function initReveal(){
   document.querySelectorAll('section h2, #hero h1').forEach(el=>{
     const text = el.innerHTML;
@@ -510,8 +519,9 @@ function initReveal(){
     }, isHero ? '-=0.3' : '-=0.35');
   });
 
+  // Transition de couleur douce d'arrière-plan au scroll (garde la teinte ébène clair)
   gsap.to('body', {
-    backgroundColor: '#DAD4C6',
+    backgroundColor: '#E8E4DB',
     ease:'none',
     scrollTrigger:{
       trigger:'#preuves',
