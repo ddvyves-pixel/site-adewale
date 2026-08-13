@@ -55,7 +55,7 @@
   }
   #cursor.hover{transform:rotate(45deg) scale(1.8);}
 
-  /* Désactiver le curseur sur mobile/touch */
+  /* Désactiver le curseur personnalisé sur mobile/touch */
   @media (hover: none) and (pointer: coarse) {
     body { cursor: auto; }
     #cursor { display: none; }
@@ -88,7 +88,7 @@
     padding:28px 48px;z-index:100;
     mix-blend-mode:difference;
   }
-  nav .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.02em;color:var(--cauri);}
+  nav .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.02em;color:var(--cauri);text-decoration:none;}
   nav ul{list-style:none;display:flex;gap:36px;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
   nav a{color:var(--cauri);text-decoration:none;position:relative;}
   nav a::after{
@@ -162,7 +162,7 @@
     background:var(--terracotta);color:var(--ebene);
     border:none;border-radius:2px;
     font-family:'Manrope',sans-serif;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;
-    cursor:pointer;position:relative;overflow:hidden;
+    cursor:pointer;position:relative;overflow:hidden;text-decoration:none;
   }
 
   .reveal-word { display: inline-block; overflow: hidden; vertical-align: top; }
@@ -194,12 +194,12 @@
 <canvas id="scene-canvas"></canvas>
 
 <nav>
-  <div class="logo">ADEWALE</div>
+  <a href="index.html" class="logo">ADEWALE</a>
   <ul>
-    <li><a href="#savoir">Le savoir</a></li>
-    <li><a href="#lecture">La lecture</a></li>
-    <li><a href="#preuves">Témoignages</a></li>
-    <li><a href="#cta">Consultation</a></li>
+    <li><a href="savoir.html">Le savoir</a></li>
+    <li><a href="lecture.html">La lecture</a></li>
+    <li><a href="temoignages.html">Témoignages</a></li>
+    <li><a href="consultation.html">Consultation</a></li>
   </ul>
 </nav>
 
@@ -250,7 +250,7 @@
       <div class="eyebrow">La consultation</div>
       <h2 class="js-split">Le plateau attend votre question.</h2>
       <p>Réservez une séance individuelle, en personne ou à distance.</p>
-      <button class="btn js-magnetic">Prendre rendez-vous</button>
+      <a href="consultation.html" class="btn js-magnetic">Prendre rendez-vous</a>
     </div>
   </section>
 
@@ -465,7 +465,7 @@ gsap.to('#savoir .odu-glyph', {
   scrollTrigger:{trigger:'#savoir', start:'top 60%'}
 });
 
-/* ============ RÉVÉLATIONS DE TEXTE (SPLIT NET) ============ */
+/* ============ RÉVÉLATIONS DE TEXTE ============ */
 function initReveal(){
   document.querySelectorAll('.js-split').forEach(el=>{
     const lines = el.innerHTML.split('<br>');
