@@ -55,6 +55,12 @@
   }
   #cursor.hover{transform:rotate(45deg) scale(1.8);}
 
+  /* Désactiver le curseur sur mobile/touch */
+  @media (hover: none) and (pointer: coarse) {
+    body { cursor: auto; }
+    #cursor { display: none; }
+  }
+
   /* ---------- PRÉCHARGEMENT ---------- */
   #preloader{
     position:fixed;inset:0;
@@ -69,6 +75,7 @@
     0%{transform:rotate(0deg) translateX(30px) rotate(0deg);}
     100%{transform:rotate(360deg) translateX(30px) rotate(-360deg);}
   }
+  #odu-track{display:flex;gap:6px;}
   .odu-mark{width:10px;height:2px;background:rgba(36,31,26,0.15);transition:background .3s;}
   .odu-mark.lit{background:var(--or);}
   #preloader-label{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(36,31,26,0.55);}
@@ -81,7 +88,7 @@
     padding:28px 48px;z-index:100;
     mix-blend-mode:difference;
   }
-  nav .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.02em;}
+  nav .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.02em;color:var(--cauri);}
   nav ul{list-style:none;display:flex;gap:36px;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
   nav a{color:var(--cauri);text-decoration:none;position:relative;}
   nav a::after{
@@ -129,13 +136,14 @@
 
   #savoir .constellation{
     display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
-    max-width:400px;margin-top:40px;
+    max-width:500px;margin-top:40px;
   }
   #savoir .odu-glyph{
-    aspect-ratio:1;border:1px solid rgba(201,161,90,0.25);
+    aspect-ratio:1;border:1px solid rgba(169,130,46,0.3);
     display:flex;align-items:center;justify-content:center;
-    font-family:'Fraunces',serif;font-size:14px;color:var(--or);
+    font-family:'Fraunces',serif;font-size:13px;color:var(--or);
     opacity:0;transform:translateY(12px);
+    text-align:center;padding:4px;
   }
 
   #preuves{align-items:flex-end;text-align:right;}
@@ -151,19 +159,21 @@
   .btn{
     display:inline-flex;align-items:center;gap:12px;
     margin-top:36px;padding:16px 36px;
-    background:var(--terracotta);color:var(--cauri);
+    background:var(--terracotta);color:var(--ebene);
     border:none;border-radius:2px;
     font-family:'Manrope',sans-serif;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;
-    cursor:none;position:relative;overflow:hidden;
+    cursor:pointer;position:relative;overflow:hidden;
   }
 
-  .reveal-char{display:inline-block;opacity:0;transform:translateY(20px);}
+  .reveal-word { display: inline-block; overflow: hidden; vertical-align: top; }
+  .reveal-char { display: inline-block; opacity: 0; transform: translateY(100%); }
 
   @media (max-width:768px){
     nav{padding:20px 24px;}
     nav ul{display:none;}
     section{padding:0 24px;}
     #scene-canvas{opacity:0.6;}
+    #savoir .constellation{grid-template-columns:repeat(2,1fr);}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -205,7 +215,7 @@
   <section id="desequilibre">
     <div class="section-inner">
       <div class="eyebrow">Le déséquilibre</div>
-      <h2>Nous portons tous des questions que le monde visible ne peut résoudre seul.</h2>
+      <h2 class="js-split">Nous portons tous des questions que le monde visible ne peut résoudre seul.</h2>
       <p>Perte de repères, décisions à prendre, un chemin qui semble bloqué — le Fâ n'apporte pas de prédiction toute faite, il révèle l'équilibre à restaurer.</p>
     </div>
   </section>
@@ -213,7 +223,7 @@
   <section id="savoir">
     <div class="section-inner">
       <div class="eyebrow">Le savoir</div>
-      <h2>Le Fâ est un système de connaissance, pas une superstition.</h2>
+      <h2 class="js-split">Le Fâ est un système de connaissance, pas une superstition.</h2>
       <p>Transmis oralement depuis des générations, il s'appuie sur 16 signes fondamentaux (odù), combinés en 256 figures, chacune porteuse d'un enseignement précis.</p>
       <div class="constellation" id="constellation"></div>
     </div>
@@ -222,7 +232,7 @@
   <section id="lecture">
     <div class="section-inner">
       <div class="eyebrow">La lecture</div>
-      <h2>Une consultation avec ADEWALE suit un protocole précis et respecté.</h2>
+      <h2 class="js-split">Une consultation avec ADEWALE suit un protocole précis et respecté.</h2>
       <p>Interrogation du plateau, lecture des ikin, interprétation du signe obtenu à la lumière de votre question — un dialogue entre vous, le devin et la tradition.</p>
     </div>
   </section>
@@ -238,7 +248,7 @@
   <section id="cta">
     <div class="section-inner">
       <div class="eyebrow">La consultation</div>
-      <h2>Le plateau attend votre question.</h2>
+      <h2 class="js-split">Le plateau attend votre question.</h2>
       <p>Réservez une séance individuelle, en personne ou à distance.</p>
       <button class="btn js-magnetic">Prendre rendez-vous</button>
     </div>
@@ -256,13 +266,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 /* ============ CURSEUR PERSONNALISÉ ============ */
 const cursor = document.getElementById('cursor');
-window.addEventListener('mousemove', e=>{
-  gsap.to(cursor,{x:e.clientX-7,y:e.clientY-7,duration:0.15,ease:'power2.out'});
-});
-document.querySelectorAll('a,button').forEach(el=>{
-  el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));
-  el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));
-});
+if (window.matchMedia('(hover: hover)').matches) {
+  window.addEventListener('mousemove', e=>{
+    gsap.to(cursor,{x:e.clientX-7,y:e.clientY-7,duration:0.15,ease:'power2.out'});
+  });
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));
+    el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));
+  });
+}
 
 /* ============ PRÉCHARGEMENT ============ */
 const track = document.getElementById('odu-track');
@@ -287,7 +299,7 @@ function fakeLoad(){
         }
       });
     }
-  }, 90);
+  }, 70);
 }
 window.addEventListener('load', fakeLoad);
 
@@ -301,7 +313,6 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
 camera.position.set(0, 1.4, 6);
 
-// ---- Groupe plateau + ikin : rempli soit par les GLB réels, soit par le repli procédural ----
 const plateau = new THREE.Group();
 scene.add(plateau);
 let ikinMesh = null;
@@ -311,12 +322,12 @@ const ikinRadius = 2.6;
 
 function buildFallbackPlateau(){
   const geo = new THREE.CylinderGeometry(2, 2.1, 0.15, 48, 1);
-  const mat = new THREE.MeshStandardMaterial({color:0x2a2340, roughness:0.55, metalness:0.15});
+  const mat = new THREE.MeshStandardMaterial({color:0x241F1A, roughness:0.55, metalness:0.15});
   const mesh = new THREE.Mesh(geo, mat);
   plateau.add(mesh);
 
   const rimGeo = new THREE.TorusGeometry(2.05, 0.03, 16, 64);
-  const rimMat = new THREE.MeshStandardMaterial({color:0xC9A15A, roughness:0.3, metalness:0.6});
+  const rimMat = new THREE.MeshStandardMaterial({color:0xA9822E, roughness:0.3, metalness:0.6});
   const rim = new THREE.Mesh(rimGeo, rimMat);
   rim.rotation.x = Math.PI/2;
   mesh.add(rim);
@@ -324,19 +335,14 @@ function buildFallbackPlateau(){
 
 function buildFallbackIkin(){
   const geo = new THREE.SphereGeometry(0.06, 12, 12);
-  const mat = new THREE.MeshStandardMaterial({color:0xF3EDE1, roughness:0.4});
+  const mat = new THREE.MeshStandardMaterial({color:0xDAD4C6, roughness:0.4});
   ikinMesh = new THREE.InstancedMesh(geo, mat, ikinCount);
   scene.add(ikinMesh);
 }
 
-// Le repli s'affiche immédiatement — la scène n'est jamais vide, même si le CDN
-// des loaders ou le fichier GLB ne sont pas joignables dans l'environnement d'aperçu.
 buildFallbackPlateau();
 buildFallbackIkin();
 
-// Chargement des vrais modèles sculptés — remplace les fichiers dans /assets/models/
-// En cas de succès, ils remplacent le repli ci-dessus. En cas d'échec (CDN bloqué,
-// fichier absent, etc.), le repli déjà affiché reste simplement en place.
 try{
   if(typeof THREE.GLTFLoader === 'function'){
     const dracoLoader = new THREE.DRACOLoader();
@@ -363,21 +369,18 @@ try{
       undefined,
       (err)=>{ console.warn('GLB opon.glb non chargé, repli conservé :', err); }
     );
-  } else {
-    console.warn('THREE.GLTFLoader indisponible (CDN bloqué) — repli procédural conservé.');
   }
 }catch(err){
   console.warn('Erreur au chargement du GLB, repli conservé :', err);
 }
 
-// Lumières
 const key = new THREE.PointLight(0xffb37a, 8, 20);
 key.position.set(3, 3, 3);
 scene.add(key);
-const rimLight = new THREE.PointLight(0xC9A15A, 4, 15);
+const rimLight = new THREE.PointLight(0xA9822E, 4, 15);
 rimLight.position.set(-3, 1, -3);
 scene.add(rimLight);
-const ambient = new THREE.AmbientLight(0x2a2340, 0.6);
+const ambient = new THREE.AmbientLight(0x241F1A, 0.8);
 scene.add(ambient);
 
 let mouseX = 0, mouseY = 0;
@@ -389,17 +392,19 @@ window.addEventListener('mousemove', e=>{
 function animate(t){
   requestAnimationFrame(animate);
   const time = t*0.0002;
-  for(let i=0;i<ikinCount;i++){
-    const angle = time + (i/ikinCount)*Math.PI*2;
-    dummy.position.set(Math.cos(angle)*ikinRadius, 0.15+Math.sin(time*2+i)*0.05, Math.sin(angle)*ikinRadius*0.5);
-    dummy.updateMatrix();
-    ikinMesh.setMatrixAt(i, dummy.matrix);
+  
+  if(ikinMesh){
+    for(let i=0;i<ikinCount;i++){
+      const angle = time + (i/ikinCount)*Math.PI*2;
+      dummy.position.set(Math.cos(angle)*ikinRadius, 0.15+Math.sin(time*2+i)*0.05, Math.sin(angle)*ikinRadius*0.5);
+      dummy.updateMatrix();
+      ikinMesh.setMatrixAt(i, dummy.matrix);
+    }
+    ikinMesh.instanceMatrix.needsUpdate = true;
   }
-  ikinMesh.instanceMatrix.needsUpdate = true;
 
   plateau.rotation.y += 0.0015;
 
-  // Parallax souris (léger, amorti)
   camera.position.x += (mouseX*0.6 - camera.position.x*0.05)*0.05;
   camera.position.y += (1.4 - mouseY*0.4 - camera.position.y)*0.03;
   camera.lookAt(0,0,0);
@@ -414,7 +419,7 @@ window.addEventListener('resize', ()=>{
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-/* ============ SCROLL : CAMÉRA TRAVERSE LE PORTAIL ============ */
+/* ============ SCROLL / GSAP ANIMATIONS ============ */
 gsap.to(camera.position, {
   z: -8, y: 0.3,
   ease:'none',
@@ -460,20 +465,37 @@ gsap.to('#savoir .odu-glyph', {
   scrollTrigger:{trigger:'#savoir', start:'top 60%'}
 });
 
-/* ============ RÉVÉLATIONS DE TEXTE ============ */
+/* ============ RÉVÉLATIONS DE TEXTE (SPLIT NET) ============ */
 function initReveal(){
-  document.querySelectorAll('section h2, #hero h1').forEach(el=>{
-    const text = el.innerHTML;
-    const words = text.split(/(<br>)/).map(part=>{
-      if(part==='<br>') return part;
-      return part.split(' ').map(w=>`<span class="reveal-word" style="display:inline-block;overflow:hidden;"><span class="reveal-char" style="display:inline-block;">${w}&nbsp;</span></span>`).join('');
-    }).join('');
-    el.innerHTML = text.includes('<br>') ? words : words;
-  });
-  gsap.utils.toArray('.reveal-char').forEach(el=>{
-    gsap.to(el, {
-      opacity:1, y:0, duration:0.8, ease:'power3.out',
-      scrollTrigger:{trigger:el, start:'top 90%'}
+  document.querySelectorAll('.js-split').forEach(el=>{
+    const lines = el.innerHTML.split('<br>');
+    el.innerHTML = '';
+    
+    lines.forEach((line, lineIdx)=>{
+      const lineDiv = document.createElement('div');
+      const words = line.trim().split(' ');
+      
+      words.forEach(word => {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'reveal-word';
+        
+        const charSpan = document.createElement('span');
+        charSpan.className = 'reveal-char';
+        charSpan.innerHTML = word + '&nbsp;';
+        
+        wordSpan.appendChild(charSpan);
+        lineDiv.appendChild(wordSpan);
+      });
+
+      el.appendChild(lineDiv);
+      if (lineIdx < lines.length - 1) {
+        el.appendChild(document.createElement('br'));
+      }
+    });
+
+    gsap.to(el.querySelectorAll('.reveal-char'), {
+      opacity:1, y:0, duration:0.8, stagger: 0.02, ease:'power3.out',
+      scrollTrigger:{trigger:el, start:'top 85%'}
     });
   });
 }
