@@ -15,16 +15,30 @@
     --cauri:#241F1A;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
+
+  /* ARRIÈRE-PLAN AVEC VOTRE IMAGE LOCALE */
   body{
     background:var(--ebene);
     color:var(--cauri);
     font-family:'Manrope',sans-serif;
     overflow-x:hidden;
     cursor:none;
+    position: relative;
+    min-height: 100vh;
   }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: linear-gradient(rgba(237, 234, 227, 0.88), rgba(237, 234, 227, 0.88)),
+                url('images/consultation-bg.jpg') center/cover no-repeat;
+    z-index: -1;
+  }
+
   ::selection{background:var(--terracotta);color:var(--cauri);}
 
-  /* RIDEAU */
+  /* RIDEAU DE TRANSITION */
   #curtain {
     position: fixed;
     top: 0; left: 0;
@@ -59,7 +73,7 @@
     position:fixed;top:0;left:0;width:100%;
     display:flex;justify-content:space-between;align-items:center;
     padding:28px 48px;z-index:100;
-    background:rgba(237,234,227,0.9);
+    background:rgba(237,234,227,0.85);
     backdrop-filter:blur(10px);
   }
   nav .logo{font-family:'Fraunces',serif;font-size:20px;color:var(--cauri);text-decoration:none;}
@@ -77,16 +91,26 @@
   h1{font-family:'Fraunces',serif;font-size:clamp(40px,6vw,72px);line-height:1.05;margin-bottom:32px;}
   .intro{font-size:18px;line-height:1.6;color:rgba(36,31,26,0.85);font-weight:300;margin-bottom:40px;}
 
-  form{display:flex;flex-direction:column;gap:24px;}
+  form{
+    display:flex;flex-direction:column;gap:24px;
+    background:rgba(237,234,227,0.6);
+    padding:32px;
+    border:1px solid rgba(169,130,46,0.25);
+    backdrop-filter:blur(5px);
+  }
   .form-group{display:flex;flex-direction:column;gap:8px;}
   label{font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--or);}
   input, select, textarea{
-    width:100%;padding:16px;background:transparent;
+    width:100%;padding:16px;
+    background:rgba(255,255,255,0.4);
     border:1px solid rgba(36,31,26,0.2);border-radius:2px;
     color:var(--cauri);font-family:'Manrope',sans-serif;font-size:15px;outline:none;
-    transition:border-color .3s;
+    transition:border-color .3s, background .3s;
   }
-  input:focus, select:focus, textarea:focus{border-color:var(--terracotta);}
+  input:focus, select:focus, textarea:focus{
+    border-color:var(--terracotta);
+    background:rgba(255,255,255,0.7);
+  }
 
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:12px;

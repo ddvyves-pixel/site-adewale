@@ -15,16 +15,30 @@
     --cauri:#241F1A;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
+  
+  /* ARRIÈRE-PLAN AVEC VOTRE IMAGE LOCALE */
   body{
     background:var(--ebene);
     color:var(--cauri);
     font-family:'Manrope',sans-serif;
     overflow-x:hidden;
     cursor:none;
+    position: relative;
+    min-height: 100vh;
   }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: linear-gradient(rgba(237, 234, 227, 0.88), rgba(237, 234, 227, 0.88)),
+                url('images/savoir-bg.jpg') center/cover no-repeat;
+    z-index: -1;
+  }
+
   ::selection{background:var(--terracotta);color:var(--cauri);}
 
-  /* RIDEAU */
+  /* RIDEAU DE TRANSITION */
   #curtain {
     position: fixed;
     top: 0; left: 0;
@@ -59,7 +73,7 @@
     position:fixed;top:0;left:0;width:100%;
     display:flex;justify-content:space-between;align-items:center;
     padding:28px 48px;z-index:100;
-    background:rgba(237,234,227,0.9);
+    background:rgba(237,234,227,0.85);
     backdrop-filter:blur(10px);
   }
   nav .logo{font-family:'Fraunces',serif;font-size:20px;color:var(--cauri);text-decoration:none;}
@@ -84,12 +98,13 @@
     margin-top:40px;
   }
   .card-odu{
-    border:1px solid rgba(169,130,46,0.25);
+    border:1px solid rgba(169,130,46,0.3);
     padding:24px;
-    background:rgba(255,255,255,0.2);
+    background:rgba(237,234,227,0.6);
+    backdrop-filter:blur(5px);
   }
   .card-odu h3{font-family:'Fraunces',serif;color:var(--or);margin-bottom:8px;}
-  .card-odu p{font-size:13px;color:rgba(36,31,26,0.7);line-height:1.5;}
+  .card-odu p{font-size:13px;color:rgba(36,31,26,0.75);line-height:1.5;}
 
   @media (max-width:768px){
     nav{padding:20px 24px;}

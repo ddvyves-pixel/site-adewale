@@ -15,16 +15,30 @@
     --cauri:#241F1A;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
+
+  /* ARRIÈRE-PLAN AVEC VOTRE IMAGE LOCALE */
   body{
     background:var(--ebene);
     color:var(--cauri);
     font-family:'Manrope',sans-serif;
     overflow-x:hidden;
     cursor:none;
+    position: relative;
+    min-height: 100vh;
   }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: linear-gradient(rgba(237, 234, 227, 0.88), rgba(237, 234, 227, 0.88)),
+                url('images/lecture-bg.jpg') center/cover no-repeat;
+    z-index: -1;
+  }
+
   ::selection{background:var(--terracotta);color:var(--cauri);}
 
-  /* RIDEAU */
+  /* RIDEAU DE TRANSITION */
   #curtain {
     position: fixed;
     top: 0; left: 0;
@@ -59,7 +73,7 @@
     position:fixed;top:0;left:0;width:100%;
     display:flex;justify-content:space-between;align-items:center;
     padding:28px 48px;z-index:100;
-    background:rgba(237,234,227,0.9);
+    background:rgba(237,234,227,0.85);
     backdrop-filter:blur(10px);
   }
   nav .logo{font-family:'Fraunces',serif;font-size:20px;color:var(--cauri);text-decoration:none;}
@@ -79,7 +93,8 @@
 
   .step-list{display:flex;flex-direction:column;gap:24px;}
   .step-card{
-    background:rgba(36,31,26,0.03);
+    background:rgba(237,234,227,0.65);
+    backdrop-filter:blur(5px);
     padding:32px;
     border-left:3px solid var(--or);
     display:grid;
@@ -88,7 +103,7 @@
   }
   .step-number{font-family:'Fraunces',serif;font-size:36px;color:var(--terracotta);}
   .step-content h3{font-family:'Fraunces',serif;font-size:22px;margin-bottom:8px;}
-  .step-content p{font-size:15px;line-height:1.6;color:rgba(36,31,26,0.75);}
+  .step-content p{font-size:15px;line-height:1.6;color:rgba(36,31,26,0.8);}
 
   @media (max-width:768px){
     nav{padding:20px 24px;}
