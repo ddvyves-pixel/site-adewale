@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADEWALE — Le Savoir du Fâ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --nuit:#DAD4C6;
+    --ebene:#EDEAE3;
+    --terracotta:#C1562D;
+    --or:#A9822E;
+    --cauri:#241F1A;
+    --vert:#3B4B3A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--ebene);
+    color:var(--cauri);
+    font-family:'Manrope',sans-serif;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  ::selection{background:var(--terracotta);color:var(--cauri);}
+
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    letter-spacing:-0.01em;
+  }
+
+  /* CURSEUR */
+  #cursor{
+    position:fixed;
+    width:14px;height:14px;
+    border:1.5px solid var(--or);
+    border-radius:2px;
+    transform:rotate(45deg);
+    pointer-events:none;
+    z-index:9999;
+    transition:transform .3s ease;
+    mix-blend-mode:difference;
+  }
+  #cursor.hover{transform:rotate(45deg) scale(1.8);}
+
+  @media (hover: none) and (pointer: coarse) {
+    body { cursor: auto; }
+    #cursor { display: none; }
+  }
+
+  /* NAVIGATION */
+  nav{
+    position:fixed;top:0;left:0;width:100%;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:28px 48px;z-index:100;
+    background:rgba(237,234,227,0.9);
+    backdrop-filter:blur(10px);
+  }
+  nav .logo{font-family:'Fraunces',serif;font-size:20px;letter-spacing:0.02em;color:var(--cauri);text-decoration:none;}
+  nav ul{list-style:none;display:flex;gap:36px;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
+  nav a{color:var(--cauri);text-decoration:none;position:relative;}
+  nav a.active, nav a:hover{color:var(--terracotta);}
+
+  /* CONTENU PAGE */
+  main{
+    max-width:900px;
+    margin:0 auto;
+    padding:160px 24px 80px 24px;
+  }
+
+  .eyebrow{
+    font-size:13px;letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--terracotta);margin-bottom:20px;
+  }
+
+  h1{
+    font-size:clamp(40px,6vw,72px);
+    line-height:1.05;
+    margin-bottom:32px;
+  }
+
+  .intro{
+    font-size:20px;
+    line-height:1.6;
+    color:rgba(36,31,26,0.85);
+    font-weight:300;
+    margin-bottom:48px;
+  }
+
+  .content-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    margin-bottom:60px;
+  }
+
+  .card{
+    background:rgba(36,31,26,0.03);
+    padding:32px;
+    border:1px solid rgba(169,130,46,0.2);
+    border-radius:4px;
+  }
+
+  .card h3{
+    font-size:22px;
+    margin-bottom:12px;
+    color:var(--or);
+  }
+
+  .card p{
+    font-size:15px;
+    line-height:1.6;
+    color:rgba(36,31,26,0.75);
+  }
+
+  /* LISTE DES 16 ODÙ */
+  .odu-section{
+    margin-top:60px;
+  }
+
+  .odu-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+    gap:16px;
+    margin-top:24px;
+  }
+
+  .odu-box{
+    border:1px solid rgba(169,130,46,0.3);
+    padding:20px;
+    text-align:center;
+    background:rgba(255,255,255,0.4);
+  }
+
+  .odu-box h4{
+    font-family:'Fraunces',serif;
+    color:var(--or);
+    font-size:18px;
+  }
+
+  @media (max-width:768px){
+    nav{padding:20px 24px;}
+    nav ul{display:none;}
+    .content-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<nav>
+  <a href="index.html" class="logo">ADEWALE</a>
+  <ul>
+    <li><a href="savoir.html" class="active">Le savoir</a></li>
+    <li><a href="lecture.html">La lecture</a></li>
+    <li><a href="temoignages.html">Témoignages</a></li>
+    <li><a href="consultation.html">Consultation</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="eyebrow">Géomancie & Tradition</div>
+  <h1>Tout comprendre sur le Fâ</h1>
+  
+  <p class="intro">
+    Le Fâ n'est ni un dogme ni une simple divination mystique. C'est un système scientifique et philosophique complexe issu du Golfe du Bénin, permettant d'analyser les lois de la nature et le chemin de chaque être humain.
+  </p>
+
+  <div class="content-grid">
+    <div class="card">
+      <h3>Origines Ancestrales</h3>
+      <p>Inscrit au patrimoine immatériel, le Fâ s'est développé à travers les royaumes du Dahomey et des peuples Yoruba, Fon et Ewe. Il sert de pont entre le monde matériel et les forces subtiles.</p>
+    </div>
+    <div class="card">
+      <h3>Les 256 Combinaisons</h3>
+      <p>À partir de 16 signes-mères fondamentaux (les Meji), le Fâ génère 240 combinaisons dérivées. Chaque signe (*Odù*) contient une série de récits, de proverbes et de remèdes spécifiques.</p>
+    </div>
+  </div>
+
+  <section class="odu-section">
+    <h2>Les 16 Odù Principaux (Mêdji)</h2>
+    <div class="odu-grid">
+      <div class="odu-box"><h4>1. Gbê-mêdji</h4></div>
+      <div class="odu-box"><h4>2. Yêkou-mêdji</h4></div>
+      <div class="odu-box"><h4>3. Woli-mêdji</h4></div>
+      <div class="odu-box"><h4>4. Di-mêdji</h4></div>
+      <div class="odu-box"><h4>5. Losso-mêdji</h4></div>
+      <div class="odu-box"><h4>6. Winlin-mêdji</h4></div>
+      <div class="odu-box"><h4>7. Abla-mêdji</h4></div>
+      <div class="odu-box"><h4>8. Aklan-mêdji</h4></div>
+      <div class="odu-box"><h4>9. Guda-mêdji</h4></div>
+      <div class="odu-box"><h4>10. Sa-mêdji</h4></div>
+      <div class="odu-box"><h4>11. Ka-mêdji</h4></div>
+      <div class="odu-box"><h4>12. Trukpin-mêdji</h4></div>
+      <div class="odu-box"><h4>13. Tula-mêdji</h4></div>
+      <div class="odu-box"><h4>14. Lètè-mêdji</h4></div>
+      <div class="odu-box"><h4>15. Tchê-mêdji</h4></div>
+      <div class="odu-box"><h4>16. Fu-mêdji</h4></div>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+/* CURSEUR PERSONNALISÉ */
+const cursor = document.getElementById('cursor');
+if (window.matchMedia('(hover: hover)').matches) {
+  window.addEventListener('mousemove', e => {
+    gsap.to(cursor, {x: e.clientX - 7, y: e.clientY - 7, duration: 0.15, ease: 'power2.out'});
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+}
+</script>
+</body>
+</html>
