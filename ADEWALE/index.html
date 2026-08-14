@@ -149,6 +149,7 @@
     color: var(--cauri);
     text-decoration: none;
     font-weight: 600;
+    z-index: 101;
   }
 
   nav ul {
@@ -185,22 +186,38 @@
     transform-origin: left;
   }
 
-  /* Menu Mobile */
+  /* ---------- MENU MOBILE & CROIX ---------- */
   .mobile-toggle {
     display: none;
     background: none;
     border: none;
     cursor: pointer;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 6px;
-    padding: 4px;
+    padding: 8px;
+    z-index: 101;
+    width: 40px;
+    height: 40px;
+    position: relative;
   }
 
   .mobile-toggle span {
     width: 24px;
     height: 2px;
     background: var(--cauri);
-    transition: transform 0.3s, opacity 0.3s;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease;
+    transform-origin: center;
+  }
+
+  /* Transformation des 2 barres en Croix (X) */
+  nav.open .mobile-toggle span:nth-child(1) {
+    transform: translateY(4px) rotate(45deg);
+  }
+
+  nav.open .mobile-toggle span:nth-child(2) {
+    transform: translateY(-4px) rotate(-45deg);
   }
 
   /* ---------- SECTIONS ---------- */
@@ -474,9 +491,17 @@ gsap.registerPlugin(ScrollTrigger);
 /* ============ MENU MOBILE ============ */
 const menuToggle = document.getElementById('menu-toggle');
 const navbar = document.getElementById('navbar');
-if(menuToggle) {
+const navLinks = document.querySelectorAll('nav ul a');
+
+if (menuToggle) {
   menuToggle.addEventListener('click', () => {
     navbar.classList.toggle('open');
+  });
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navbar.classList.remove('open');
+    });
   });
 }
 
@@ -502,7 +527,7 @@ function initReveal() {
     const lines = el.innerHTML.split('<br>');
     el.innerHTML = '';
     
-    lines.forEach((line, lineIdx) => {
+    lines.forEach((line) => {
       const lineSpan = document.createElement('span');
       lineSpan.className = 'reveal-line';
       const words = line.trim().split(' ');
@@ -608,7 +633,6 @@ function buildFallbackIkin() {
 buildFallbackPlateau();
 buildFallbackIkin();
 
-// Chargement du modèle 3D alternatif si disponible
 if (typeof THREE.GLTFLoader === 'function') {
   try {
     const dracoLoader = new THREE.DRACOLoader();
@@ -633,7 +657,7 @@ if (typeof THREE.GLTFLoader === 'function') {
         plateau.add(model);
       },
       undefined,
-      (err) => { console.log('Utilisation du plateau de secours 3D.'); }
+      () => { console.log('Utilisation du plateau de secours 3D.'); }
     );
   } catch(e) {
     console.log('Chargement GLTF ignoré.');
