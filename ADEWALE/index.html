@@ -3,426 +3,262 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADEWALE — L'étude du Fâ</title>
+<title>ADEWALE — L'Art du Fá & de la Clarté</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --nuit: #DAD4C6;
-    --ebene: #EDEAE3;
-    --terracotta: #C1562D;
-    --or: #A9822E;
-    --cauri: #241F1A;
-    --vert: #3B4B3A;
-    --marron-menu: #5C2C16; /* Couleur marron dédiée au menu */
+  :root{
+    --nuit:#DAD4C6;
+    --ebene:#EDEAE3;
+    --terracotta:#C1562D;
+    --or:#A9822E;
+    --cauri:#241F1A;
+    --marron-footer:#1A1512;
   }
+  *{margin:0;padding:0;box-sizing:border-box;}
 
-  *, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--ebene);
-    color: var(--cauri);
-    font-family: 'Manrope', sans-serif;
-    overflow-x: hidden;
-    cursor: default;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    body { cursor: none; }
-  }
-
-  ::selection {
-    background: var(--terracotta);
-    color: var(--ebene);
-  }
-
-  h1, h2, .display {
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-  }
-
-  /* ---------- CANVAS 3D ---------- */
-  #scene-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  /* ---------- CURSEUR ---------- */
-  #cursor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 14px;
-    height: 14px;
-    border: 1.5px solid var(--or);
-    border-radius: 2px;
-    transform: rotate(45deg);
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    mix-blend-mode: difference;
-    opacity: 0;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    #cursor { opacity: 1; }
-  }
-
-  #cursor.hover {
-    transform: rotate(45deg) scale(1.8);
-    background-color: rgba(169, 130, 78, 0.2);
-  }
-
-  /* ---------- PRÉCHARGEMENT ---------- */
-  #preloader {
-    position: fixed;
-    inset: 0;
-    background: var(--ebene);
-    z-index: 10000;
+  body{
+    background:var(--ebene);
+    color:var(--cauri);
+    font-family:'Manrope',sans-serif;
+    overflow-x:hidden;
+    cursor:none;
+    position: relative;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
   }
 
-  #preloader .ikin {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--terracotta);
-    animation: spin-ikin 2.5s linear infinite;
-  }
-
-  @keyframes spin-ikin {
-    0% { transform: rotate(0deg) translateX(28px) rotate(0deg); }
-    100% { transform: rotate(360deg) translateX(28px) rotate(-360deg); }
-  }
-
-  #odu-track { display: flex; gap: 6px; }
-  .odu-mark {
-    width: 10px;
-    height: 2px;
-    background: rgba(36,31,26,0.15);
-    transition: background 0.3s;
-  }
-  .odu-mark.lit { background: var(--or); }
-
-  #preloader-label {
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: rgba(36,31,26,0.55);
-  }
-
-  /* ---------- NAVIGATION ---------- */
-  main { position: relative; z-index: 2; }
-
-  nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 28px 48px;
-    z-index: 100;
-  }
-
-  nav .logo {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    letter-spacing: 0.04em;
-    color: var(--cauri);
-    text-decoration: none;
-    font-weight: 600;
-    z-index: 101;
-  }
-
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 36px;
-    font-size: 15px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  /* MODIFICATION DE LA POLICE ET DE LA COULEUR DU MENU */
-  nav a {
-    color: var(--marron-menu) !important;
-    font-family: 'Times New Roman', Times, serif !important;
-    font-weight: bold;
-    text-decoration: none;
-    position: relative;
-    padding-bottom: 4px;
-  }
-
-  nav ul a::after {
+  body::before {
     content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 1.5px;
-    background: var(--terracotta);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: linear-gradient(rgba(237, 234, 227, 0.88), rgba(237, 234, 227, 0.88)),
+                url('images/hero-bg.jpg') center/cover no-repeat;
+    z-index: -1;
   }
 
-  nav ul a:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
+  ::selection{background:var(--terracotta);color:var(--cauri);}
+
+  #curtain {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: var(--cauri);
+    z-index: 99999;
+    transform: translateY(-100%);
+    pointer-events: none;
   }
 
-  /* ---------- MENU MOBILE & CROIX ---------- */
-  .mobile-toggle {
+  #cursor{
+    position:fixed;
+    width:14px;height:14px;
+    border:1.5px solid var(--or);
+    border-radius:2px;
+    transform:rotate(45deg);
+    pointer-events:none;
+    z-index:9998;
+    transition:transform .3s ease;
+    mix-blend-mode:difference;
+  }
+  #cursor.hover{transform:rotate(45deg) scale(1.8);}
+
+  @media (hover: none) and (pointer: coarse) {
+    body { cursor: auto; }
+    #cursor { display: none; }
+  }
+
+  nav{
+    position:fixed;top:0;left:0;width:100%;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:28px 48px;z-index:100;
+    background:rgba(237,234,227,0.85);
+    backdrop-filter:blur(10px);
+  }
+  nav .logo{font-family:'Fraunces',serif;font-size:20px;color:var(--cauri);text-decoration:none;}
+  nav ul.nav-links{
+    list-style:none;
+    display:flex;
+    gap:36px;
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+  nav a{color:var(--cauri);text-decoration:none;position:relative;}
+  nav a::after{
+    content:'';position:absolute;left:0;bottom:-4px;width:100%;height:2px;
+    background:var(--or);transform:scaleX(0);transform-origin:center;
+    transition:transform .3s ease;
+  }
+  nav a:hover::after, nav a.active::after{transform:scaleX(1);}
+  nav a.active, nav a:hover{color:var(--terracotta);}
+
+  .burger-btn {
     display: none;
     background: none;
     border: none;
     cursor: pointer;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     gap: 6px;
-    padding: 8px;
     z-index: 101;
-    width: 40px;
-    height: 40px;
-    position: relative;
+    padding: 8px;
   }
-
-  .mobile-toggle span {
+  .burger-btn span {
+    display: block;
     width: 24px;
     height: 2px;
-    background: var(--marron-menu);
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease;
-    transform-origin: center;
+    background-color: var(--cauri);
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
 
-  /* Transformation en Croix (X) */
-  nav.open .mobile-toggle span:nth-child(1) {
-    transform: translateY(4px) rotate(45deg);
+  main{
+    flex: 1;
+    max-width:1000px;
+    margin:0 auto;
+    padding:180px 24px 100px 24px;
+    text-align: center;
   }
 
-  nav.open .mobile-toggle span:nth-child(2) {
-    transform: translateY(-4px) rotate(-45deg);
+  .eyebrow{font-size:13px;letter-spacing:0.25em;text-transform:uppercase;color:var(--terracotta);margin-bottom:24px;}
+  h1{font-family:'Fraunces',serif;font-size:clamp(44px,7vw,84px);line-height:1.02;margin-bottom:36px;font-weight:500;}
+  .hero-text{font-size:20px;line-height:1.6;color:rgba(36,31,26,0.85);font-weight:300;max-width:720px;margin:0 auto 48px auto;}
+  
+  .cta-group{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;padding:18px 36px;
+    background:var(--terracotta);color:var(--ebene);text-decoration:none;
+    font-size:14px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;
+    transition:background .3s;
+  }
+  .btn:hover{background:var(--cauri);}
+  .btn-outline{
+    background:transparent;color:var(--cauri);border:1px solid var(--cauri);
+  }
+  .btn-outline:hover{background:var(--cauri);color:var(--ebene);}
+
+  /* FOOTER MARRON */
+  footer {
+    background-color: var(--marron-footer);
+    color: var(--ebene);
+    padding: 60px 48px 30px 48px;
+    margin-top: auto;
+    border-top: 1px solid rgba(169, 130, 46, 0.3);
   }
 
-  /* ---------- SECTIONS ---------- */
-  section {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 48px;
-    position: relative;
+  .footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
   }
 
-  .eyebrow {
-    font-size: 13px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--terracotta);
-    margin-bottom: 20px;
-    font-weight: 600;
+  .footer-col h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    color: var(--or);
+    margin-bottom: 16px;
   }
 
-  #hero { align-items: flex-start; }
-
-  #hero h1 {
-    font-size: clamp(40px, 7.5vw, 110px);
-    line-height: 0.98;
-    max-width: 950px;
-  }
-
-  #hero .sub {
-    margin-top: 28px;
-    font-size: 18px;
-    max-width: 480px;
-    color: rgba(36,31,26,0.8);
-    font-weight: 300;
+  .footer-col p {
+    font-size: 14px;
     line-height: 1.6;
+    color: rgba(237, 234, 227, 0.8);
+    margin-bottom: 20px;
   }
 
-  .scroll-cue {
-    position: absolute;
-    bottom: 48px;
-    left: 48px;
+  .footer-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid var(--or);
+    color: var(--ebene);
+    text-decoration: none;
     font-size: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(36,31,26,0.6);
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    transition: background 0.3s, color 0.3s;
   }
 
-  .scroll-cue .line {
-    width: 1px;
-    height: 32px;
+  .footer-btn:hover {
     background: var(--or);
-    animation: pulse-line 2s ease-in-out infinite;
+    color: var(--marron-footer);
   }
 
-  @keyframes pulse-line {
-    0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
-    50% { opacity: 1; transform: scaleY(1); }
-  }
-
-  .section-inner { max-width: 640px; }
-  section h2 { font-size: clamp(30px, 4.5vw, 54px); line-height: 1.1; margin-bottom: 24px; }
-  section p { font-size: 17px; line-height: 1.7; color: rgba(36,31,26,0.8); font-weight: 300; }
-
-  #savoir .constellation {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    max-width: 520px;
-    margin-top: 40px;
-  }
-
-  #savoir .odu-glyph {
-    aspect-ratio: 1;
-    border: 1px solid rgba(169, 130, 46, 0.3);
-    background: rgba(218, 212, 198, 0.2);
+  .footer-links {
+    list-style: none;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Fraunces', serif;
-    font-size: 13px;
-    color: var(--cauri);
-    opacity: 0;
-    transform: translateY(12px);
-    text-align: center;
-    padding: 6px;
-    transition: border-color 0.3s;
-  }
-
-  #savoir .odu-glyph:hover { border-color: var(--terracotta); }
-
-  #preuves { align-items: flex-end; text-align: right; }
-  #preuves .section-inner { margin-left: auto; }
-
-  .temoignage {
-    border-top: 1px solid rgba(36,31,26,0.15);
-    padding: 24px 0;
-    font-family: 'Fraunces', serif;
-    font-size: 20px;
-    font-weight: 300;
-    font-style: italic;
-    line-height: 1.4;
-  }
-
-  #cta { align-items: center; text-align: center; }
-  #cta .section-inner { max-width: 560px; margin: 0 auto; }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
+    flex-direction: column;
     gap: 12px;
-    margin-top: 36px;
-    padding: 18px 40px;
-    background: var(--terracotta);
-    color: var(--ebene);
-    border: none;
-    border-radius: 2px;
-    font-family: 'Manrope', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    text-decoration: none;
-    transition: background 0.3s, transform 0.2s;
   }
 
-  .btn:hover { background: var(--cauri); }
+  .footer-links a {
+    color: rgba(237, 234, 227, 0.8);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+  }
 
-  /* Animation du texte (Split text) */
-  .reveal-line { overflow: hidden; display: block; }
-  .reveal-word { display: inline-block; overflow: hidden; vertical-align: top; }
-  .reveal-char { display: inline-block; opacity: 0; transform: translateY(105%); }
+  .footer-links a:hover {
+    color: var(--terracotta);
+  }
 
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    nav { padding: 20px 24px; }
-    
-    .mobile-toggle { display: flex; }
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid rgba(237, 234, 227, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: rgba(237, 234, 227, 0.5);
+  }
 
-    nav ul {
+  @media (max-width:768px){
+    nav{padding:16px 24px;}
+    .burger-btn { display: flex; }
+    .burger-btn.active span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+    .burger-btn.active span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
+
+    nav ul.nav-links {
+      display: flex;
       position: fixed;
-      inset: 0;
+      top: 0;
+      right: -100%;
+      width: 100vw;
+      height: 100dvh;
       background: var(--ebene);
       flex-direction: column;
       justify-content: center;
       align-items: center;
       gap: 32px;
-      font-size: 22px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      z-index: 90;
+      font-size: 20px;
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
     }
-
-    nav.open ul {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    section { padding: 0 24px; }
-    #scene-canvas { opacity: 0.5; }
-    #savoir .constellation { grid-template-columns: repeat(2, 1fr); }
-    #preuves { align-items: flex-start; text-align: left; }
-    #preuves .section-inner { margin-left: 0; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-    .reveal-char { opacity: 1 !important; transform: none !important; }
+    nav ul.nav-links.open { right: 0; }
+    main { padding-top: 140px; }
+    .footer-container { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
   }
 </style>
 </head>
 <body>
 
+<div id="curtain"></div>
 <div id="cursor"></div>
 
-<div id="preloader">
-  <div class="ikin"></div>
-  <div id="odu-track"></div>
-  <div id="preloader-label">Consultation en préparation…</div>
-</div>
-
-<canvas id="scene-canvas"></canvas>
-
-<nav id="navbar">
+<nav>
   <a href="index.html" class="logo">ADEWALE</a>
-  <button class="mobile-toggle" id="menu-toggle" aria-label="Menu">
+  
+  <button class="burger-btn" aria-label="Menu">
     <span></span>
     <span></span>
   </button>
-  <ul>
+
+  <ul class="nav-links">
     <li><a href="savoir.html">Le savoir</a></li>
     <li><a href="lecture.html">La lecture</a></li>
     <li><a href="temoignages.html">Témoignages</a></li>
@@ -431,374 +267,91 @@
 </nav>
 
 <main>
-
-  <section id="hero">
-    <div class="eyebrow">L'étude du Fâ</div>
-    <h1 class="js-split">Ce que vous cherchez<br>vous a déjà trouvé.</h1>
-    <p class="sub">ADEWALE transmet la sagesse ancestrale du Fâ béninois — guidance, lecture des signes et accompagnement pour ceux qui cherchent à comprendre leur chemin.</p>
-    <div class="scroll-cue"><div class="line"></div>Défiler pour entrer</div>
-  </section>
-
-  <section id="desequilibre">
-    <div class="section-inner">
-      <div class="eyebrow">Le déséquilibre</div>
-      <h2 class="js-split">Nous portons tous des questions que le monde visible ne peut résoudre seul.</h2>
-      <p>Perte de repères, décisions à prendre, un chemin qui semble bloqué — le Fâ n'apporte pas de prédiction toute faite, il révèle l'équilibre à restaurer.</p>
-    </div>
-  </section>
-
-  <section id="savoir">
-    <div class="section-inner">
-      <div class="eyebrow">Le savoir</div>
-      <h2 class="js-split">Le Fâ est un système de connaissance, pas une superstition.</h2>
-      <p>Transmis oralement depuis des générations, il s'appuie sur 16 signes fondamentaux (odù), combinés en 256 figures, chacune porteuse d'un enseignement précis.</p>
-      <div class="constellation" id="constellation"></div>
-    </div>
-  </section>
-
-  <section id="lecture">
-    <div class="section-inner">
-      <div class="eyebrow">La lecture</div>
-      <h2 class="js-split">Une consultation avec ADEWALE suit un protocole précis et respecté.</h2>
-      <p>Interrogation du plateau, lecture des ikin, interprétation du signe obtenu à la lumière de votre question — un dialogue entre vous, le devin et la tradition.</p>
-    </div>
-  </section>
-
-  <section id="preuves">
-    <div class="section-inner">
-      <div class="eyebrow">Ce qu'ils en disent</div>
-      <div class="temoignage">« Une lecture d'une justesse déconcertante — j'ai compris ce que je fuyais depuis des mois. »</div>
-      <div class="temoignage">« ADEWALE explique chaque signe avec une clarté rare, sans mysticisme creux. »</div>
-    </div>
-  </section>
-
-  <section id="cta">
-    <div class="section-inner">
-      <div class="eyebrow">La consultation</div>
-      <h2 class="js-split">Le plateau attend votre question.</h2>
-      <p>Réservez une séance individuelle, en personne ou à distance.</p>
-      <a href="consultation.html" class="btn js-magnetic">Prendre rendez-vous</a>
-    </div>
-  </section>
-
+  <div class="eyebrow">Sagesse ancestrale & Guidance</div>
+  <h1>Éclairer le chemin par la sagesse du Fá</h1>
+  <p class="hero-text">
+    Une approche moderne, poétique et rationnelle de la consultation traditionnelle. Comprendre les symboles pour mieux diriger votre vie.
+  </p>
+  <div class="cta-group">
+    <a href="consultation.html" class="btn">Prendre rendez-vous</a>
+    <a href="savoir.html" class="btn btn-outline">Découvrir le Fá</a>
+  </div>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+<footer>
+  <div class="footer-container">
+    <div class="footer-col">
+      <h3>À PROPOS</h3>
+      <p>ADEWALE propose une lecture contemporaine de la tradition du Fá, guidée par la clarté, l'éthique et le respect de votre trajectoire de vie.</p>
+      <a href="a-propos.html" class="footer-btn">En savoir plus</a>
+    </div>
+    <div class="footer-col">
+      <h3>CONTACTS</h3>
+      <ul class="footer-links">
+        <li><a href="mailto:contact@adewale.com">contact@adewale.com</a></li>
+        <li><a href="tel:+22900000000">+229 00 00 00 00</a></li>
+        <li><span>Cotonou & Abomey-Calavi, Bénin</span></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>RÉSEAUX SOCIAUX</h3>
+      <ul class="footer-links">
+        <li><a href="#" target="_blank">Instagram</a></li>
+        <li><a href="#" target="_blank">LinkedIn</a></li>
+        <li><a href="#" target="_blank">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 ADEWALE. Tous droits réservés.</p>
+    <p>Sagesse ancestrale & Clarté contemporaine</p>
+  </div>
+</footer>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
 <script>
-gsap.registerPlugin(ScrollTrigger);
+document.addEventListener("DOMContentLoaded", () => {
+  const curtain = document.getElementById('curtain');
+  gsap.fromTo(curtain, { translateY: "0%" }, { translateY: "-100%", duration: 0.8, ease: "power3.inOut" });
 
-/* ============ MENU MOBILE ============ */
-const menuToggle = document.getElementById('menu-toggle');
-const navbar = document.getElementById('navbar');
-const navLinks = document.querySelectorAll('nav ul a');
-
-if (menuToggle) {
-  menuToggle.addEventListener('click', () => {
-    navbar.classList.toggle('open');
-  });
-
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      navbar.classList.remove('open');
+  document.querySelectorAll('a[href$=".html"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const targetUrl = link.getAttribute('href');
+      if (targetUrl === window.location.pathname.split('/').pop()) return;
+      e.preventDefault();
+      gsap.to(curtain, {
+        translateY: "0%", duration: 0.6, ease: "power3.inOut",
+        onComplete: () => { window.location.href = targetUrl; }
+      });
     });
   });
-}
 
-/* ============ CURSEUR PERSONNALISÉ ============ */
+  const burgerBtn = document.querySelector('.burger-btn');
+  const navLinks = document.querySelector('.nav-links');
+  if (burgerBtn && navLinks) {
+    burgerBtn.addEventListener('click', () => {
+      burgerBtn.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        burgerBtn.classList.remove('active');
+        navLinks.classList.remove('open');
+      });
+    });
+  }
+});
+
 const cursor = document.getElementById('cursor');
-if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+if (window.matchMedia('(hover: hover)').matches) {
   window.addEventListener('mousemove', e => {
-    gsap.to(cursor, { x: e.clientX - 7, y: e.clientY - 7, duration: 0.15, ease: 'power2.out' });
+    gsap.to(cursor, {x: e.clientX - 7, y: e.clientY - 7, duration: 0.15, ease: 'power2.out'});
   });
-
-  document.querySelectorAll('a, button, .js-magnetic').forEach(el => {
+  document.querySelectorAll('a, button').forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
   });
 }
-
-/* ============ RÉVÉLATIONS DE TEXTE (SPLIT TEXT) ============ */
-function initReveal() {
-  document.querySelectorAll('.js-split').forEach(el => {
-    if (el.dataset.splitDone) return;
-    el.dataset.splitDone = "true";
-
-    const lines = el.innerHTML.split('<br>');
-    el.innerHTML = '';
-    
-    lines.forEach((line) => {
-      const lineSpan = document.createElement('span');
-      lineSpan.className = 'reveal-line';
-      const words = line.trim().split(' ');
-      
-      words.forEach(word => {
-        const wordSpan = document.createElement('span');
-        wordSpan.className = 'reveal-word';
-        
-        const charSpan = document.createElement('span');
-        charSpan.className = 'reveal-char';
-        charSpan.innerHTML = word + '&nbsp;';
-        
-        wordSpan.appendChild(charSpan);
-        lineSpan.appendChild(wordSpan);
-      });
-
-      el.appendChild(lineSpan);
-    });
-
-    gsap.to(el.querySelectorAll('.reveal-char'), {
-      opacity: 1,
-      y: '0%',
-      duration: 0.8,
-      stagger: 0.015,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 88%'
-      }
-    });
-  });
-}
-
-/* ============ PRÉCHARGEMENT ============ */
-const track = document.getElementById('odu-track');
-for(let i = 0; i < 16; i++){
-  const m = document.createElement('div');
-  m.className = 'odu-mark';
-  track.appendChild(m);
-}
-
-let loaded = 0;
-const marks = document.querySelectorAll('.odu-mark');
-function fakeLoad(){
-  const interval = setInterval(() => {
-    loaded++;
-    if(marks[loaded-1]) marks[loaded-1].classList.add('lit');
-    if(loaded >= 16){
-      clearInterval(interval);
-      gsap.to('#preloader', {
-        opacity: 0,
-        scale: 0.98,
-        duration: 0.6,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          document.getElementById('preloader').style.display = 'none';
-          initReveal();
-        }
-      });
-    }
-  }, 50);
-}
-window.addEventListener('load', fakeLoad);
-
-/* ============ SCÈNE 3D : PLATEAU DE FÂ ============ */
-const canvas = document.getElementById('scene-canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 1.4, 6);
-
-const plateau = new THREE.Group();
-scene.add(plateau);
-
-let ikinMesh = null;
-const dummy = new THREE.Object3D();
-const ikinCount = 16;
-const ikinRadius = 2.4;
-
-function buildFallbackPlateau() {
-  const geo = new THREE.CylinderGeometry(2, 2.1, 0.15, 48);
-  const mat = new THREE.MeshStandardMaterial({ color: 0x241F1A, roughness: 0.6, metalness: 0.1 });
-  const mesh = new THREE.Mesh(geo, mat);
-  plateau.add(mesh);
-
-  const rimGeo = new THREE.TorusGeometry(2.05, 0.03, 16, 64);
-  const rimMat = new THREE.MeshStandardMaterial({ color: 0xA9822E, roughness: 0.3, metalness: 0.5 });
-  const rim = new THREE.Mesh(rimGeo, rimMat);
-  rim.rotation.x = Math.PI / 2;
-  mesh.add(rim);
-}
-
-function buildFallbackIkin() {
-  const geo = new THREE.SphereGeometry(0.06, 12, 12);
-  const mat = new THREE.MeshStandardMaterial({ color: 0xDAD4C6, roughness: 0.4 });
-  ikinMesh = new THREE.InstancedMesh(geo, mat, ikinCount);
-  scene.add(ikinMesh);
-}
-
-buildFallbackPlateau();
-buildFallbackIkin();
-
-if (typeof THREE.GLTFLoader === 'function') {
-  try {
-    const dracoLoader = new THREE.DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-    const gltfLoader = new THREE.GLTFLoader();
-    gltfLoader.setDRACOLoader(dracoLoader);
-
-    gltfLoader.load(
-      'assets/models/opon.glb',
-      (gltf) => {
-        const model = gltf.scene;
-        model.rotation.x = -Math.PI / 2;
-        model.scale.setScalar(2);
-        model.traverse(n => {
-          if(n.isMesh) {
-            if(!n.geometry.attributes.normal) n.geometry.computeVertexNormals();
-            n.material.roughness = 0.7;
-            n.material.side = THREE.DoubleSide;
-          }
-        });
-        plateau.clear();
-        plateau.add(model);
-      },
-      undefined,
-      () => { console.log('Utilisation du plateau de secours 3D.'); }
-    );
-  } catch(e) {
-    console.log('Chargement GLTF ignoré.');
-  }
-}
-
-// Lumières
-const keyLight = new THREE.PointLight(0xffb37a, 5, 20);
-keyLight.position.set(3, 3, 3);
-scene.add(keyLight);
-
-const rimLight = new THREE.PointLight(0xA9822E, 3, 15);
-rimLight.position.set(-3, 1, -3);
-scene.add(rimLight);
-
-const ambient = new THREE.AmbientLight(0xEDEAE3, 0.7);
-scene.add(ambient);
-
-// Interaction souris
-let mouseX = 0, mouseY = 0;
-window.addEventListener('mousemove', e => {
-  mouseX = (e.clientX / window.innerWidth - 0.5);
-  mouseY = (e.clientY / window.innerHeight - 0.5);
-});
-
-function animate(t) {
-  requestAnimationFrame(animate);
-  const time = t * 0.0003;
-  
-  if(ikinMesh) {
-    for(let i = 0; i < ikinCount; i++) {
-      const angle = time + (i / ikinCount) * Math.PI * 2;
-      dummy.position.set(
-        Math.cos(angle) * ikinRadius,
-        0.12 + Math.sin(time * 3 + i) * 0.04,
-        Math.sin(angle) * ikinRadius * 0.5
-      );
-      dummy.updateMatrix();
-      ikinMesh.setMatrixAt(i, dummy.matrix);
-    }
-    ikinMesh.instanceMatrix.needsUpdate = true;
-  }
-
-  plateau.rotation.y += 0.0015;
-
-  camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
-  camera.position.y += (1.4 - mouseY * 0.3 - camera.position.y) * 0.05;
-  camera.lookAt(0, 0, 0);
-
-  renderer.render(scene, camera);
-}
-requestAnimationFrame(animate);
-
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-/* ============ SCROLL / GSAP ANIMATIONS ============ */
-gsap.to(camera.position, {
-  z: -6, y: 0.2,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#desequilibre',
-    start: 'top bottom',
-    end: 'bottom top',
-    scrub: 1
-  }
-});
-
-gsap.to(plateau.scale, {
-  x: 2.2, y: 2.2, z: 2.2,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#desequilibre',
-    start: 'top bottom',
-    end: 'bottom top',
-    scrub: 1
-  }
-});
-
-gsap.to('#scene-canvas', {
-  opacity: 0,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#lecture',
-    start: 'top center',
-    end: 'bottom top',
-    scrub: 1
-  }
-});
-
-/* ============ CONSTELLATION DES ODÙ ============ */
-const oduNames = [
-  'Gbê-mêdji','Yêkou-mêdji','Woli-mêdji','Di-mêdji',
-  'Losso-mêdji','Winlin-mêdji','Abla-mêdji','Aklan-mêdji',
-  'Guda-mêdji','Sa-mêdji','Ka-mêdji','Trukpin-mêdji',
-  'Tula-mêdji','Lètè-mêdji','Tchê-mêdji','Fu-mêdji'
-];
-
-const constellation = document.getElementById('constellation');
-oduNames.forEach(name => {
-  const el = document.createElement('div');
-  el.className = 'odu-glyph';
-  el.textContent = name;
-  constellation.appendChild(el);
-});
-
-gsap.to('#savoir .odu-glyph', {
-  opacity: 1,
-  y: 0,
-  duration: 0.5,
-  stagger: 0.04,
-  ease: 'power2.out',
-  scrollTrigger: {
-    trigger: '#savoir',
-    start: 'top 65%'
-  }
-});
-
-/* ============ HOVER MAGNÉTIQUE ============ */
-document.querySelectorAll('.js-magnetic').forEach(btn => {
-  const moveX = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3.out' });
-  const moveY = gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'power3.out' });
-
-  btn.addEventListener('mousemove', e => {
-    const r = btn.getBoundingClientRect();
-    moveX((e.clientX - r.left - r.width / 2) * 0.3);
-    moveY((e.clientY - r.top - r.height / 2) * 0.3);
-  });
-
-  btn.addEventListener('mouseleave', () => {
-    moveX(0);
-    moveY(0);
-  });
-});
 </script>
 </body>
 </html>
