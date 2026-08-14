@@ -15,6 +15,7 @@
     --or: #A9822E;
     --cauri: #241F1A;
     --vert: #3B4B3A;
+    --marron-menu: #5C2C16; /* Couleur marron dédiée au menu */
   }
 
   *, *::before, *::after {
@@ -156,13 +157,16 @@
     list-style: none;
     display: flex;
     gap: 36px;
-    font-size: 13px;
+    font-size: 15px;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
 
+  /* MODIFICATION DE LA POLICE ET DE LA COULEUR DU MENU */
   nav a {
-    color: var(--cauri);
+    color: var(--marron-menu) !important;
+    font-family: 'Times New Roman', Times, serif !important;
+    font-weight: bold;
     text-decoration: none;
     position: relative;
     padding-bottom: 4px;
@@ -206,12 +210,12 @@
   .mobile-toggle span {
     width: 24px;
     height: 2px;
-    background: var(--cauri);
+    background: var(--marron-menu);
     transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease;
     transform-origin: center;
   }
 
-  /* Transformation des 2 barres en Croix (X) */
+  /* Transformation en Croix (X) */
   nav.open .mobile-toggle span:nth-child(1) {
     transform: translateY(4px) rotate(45deg);
   }
@@ -371,7 +375,7 @@
       justify-content: center;
       align-items: center;
       gap: 32px;
-      font-size: 18px;
+      font-size: 22px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
