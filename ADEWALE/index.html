@@ -190,7 +190,7 @@
     transform-origin: left;
   }
 
-  /* ---------- MENU MOBILE & CROIX ---------- */
+  /* ---------- MENU MOBILE & CROIX (3 BARRES) ---------- */
   .mobile-toggle {
     display: none;
     background: none;
@@ -208,6 +208,7 @@
   }
 
   .mobile-toggle span {
+    display: block;
     width: 24px;
     height: 2px;
     background: var(--marron-menu);
@@ -215,13 +216,17 @@
     transform-origin: center;
   }
 
-  /* Transformation en Croix (X) */
+  /* Transformation des 3 barres en Croix (X) */
   nav.open .mobile-toggle span:nth-child(1) {
-    transform: translateY(4px) rotate(45deg);
+    transform: translateY(8px) rotate(45deg);
   }
 
   nav.open .mobile-toggle span:nth-child(2) {
-    transform: translateY(-4px) rotate(-45deg);
+    opacity: 0;
+  }
+
+  nav.open .mobile-toggle span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
   }
 
   /* ---------- SECTIONS ---------- */
@@ -439,6 +444,7 @@
 <nav id="navbar">
   <a href="index.html" class="logo">ADEWALE</a>
   <button class="mobile-toggle" id="menu-toggle" aria-label="Menu">
+    <span></span>
     <span></span>
     <span></span>
   </button>
