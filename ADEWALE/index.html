@@ -403,6 +403,26 @@
     .reveal-char { opacity: 1 !important; transform: none !important; }
   }
 </style>
+<style>
+/* ===== FOOTER ADEWALE — AJOUT UNIQUEMENT ===== */
+.ad-footer{background:#7a4328;color:#f8f5ee;margin-top:80px;border-top:3px solid #A9822E;padding:0 24px;}
+.ad-footer-inner{width:min(1180px,100%);margin:auto;padding:58px 0 24px;}
+.ad-footer-grid{display:grid;grid-template-columns:1.45fr 1fr 1fr 1fr;gap:46px;}
+.ad-footer-brand{font-family:'Fraunces',serif;font-size:36px;letter-spacing:.04em;margin-bottom:20px;color:#f8f5ee;}
+.ad-footer-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#e4bd69;font-weight:700;margin-bottom:16px;}
+.ad-footer-column p,.ad-footer-column a,.ad-footer-column span{font-size:13px;line-height:1.8;color:rgba(248,245,238,.82);}
+.ad-footer-column p{max-width:360px;}
+.ad-footer-column a{text-decoration:none;display:block;transition:color .25s,transform .25s;}
+.ad-footer-column a:hover{color:#fff;transform:translateX(3px);}
+.ad-socials{display:flex;flex-wrap:wrap;gap:9px;margin-top:4px;}
+.ad-socials a{display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(248,245,238,.25);padding:8px 12px;transform:none!important;}
+.ad-socials a:hover{background:rgba(248,245,238,.12);border-color:#e4bd69;transform:none!important;}
+.ad-footer-bottom{border-top:1px solid rgba(248,245,238,.2);margin-top:44px;padding-top:18px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.ad-footer-bottom small{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(248,245,238,.58);}
+@media(max-width:900px){.ad-footer-grid{grid-template-columns:1fr 1fr;gap:34px;}}
+@media(max-width:560px){.ad-footer{padding:0 20px;}.ad-footer-inner{padding-top:46px;}.ad-footer-grid{grid-template-columns:1fr;gap:30px;}.ad-footer-brand{font-size:30px;}.ad-footer-bottom{flex-direction:column;}}
+</style>
+
 </head>
 <body>
 
@@ -482,6 +502,44 @@
   </section>
 
 </main>
+<footer class="ad-footer">
+  <div class="ad-footer-inner">
+    <div class="ad-footer-grid">
+      <div class="ad-footer-column ad-footer-about">
+        <div class="ad-footer-brand">ADEWALE</div>
+        <div class="ad-footer-title">À propos</div>
+        <p>Découvrez le Fâ à travers ADEWALE : transmission, lecture des signes et accompagnement dans une démarche de connaissance et de réflexion.</p>
+      </div>
+      <div class="ad-footer-column">
+        <div class="ad-footer-title">Navigation</div>
+        <a href="index.html">Accueil</a>
+        <a href="savoir.html">Le savoir</a>
+        <a href="lecture.html">La lecture</a>
+        <a href="temoignages.html">Témoignages</a>
+        <a href="consultation.html">Consultation</a>
+      </div>
+      <div class="ad-footer-column">
+        <div class="ad-footer-title">Contact</div>
+        <a href="tel:+22900000000">+229 XX XX XX XX</a>
+        <a href="mailto:contact@votredomaine.com">contact@votredomaine.com</a>
+        <span>Cotonou / Abomey-Calavi<br>Bénin</span>
+      </div>
+      <div class="ad-footer-column">
+        <div class="ad-footer-title">Réseaux sociaux</div>
+        <div class="ad-socials">
+          <a href="#" aria-label="Instagram">Instagram</a>
+          <a href="#" aria-label="Facebook">Facebook</a>
+          <a href="#" aria-label="WhatsApp">WhatsApp</a>
+          <a href="#" aria-label="TikTok">TikTok</a>
+        </div>
+      </div>
+    </div>
+    <div class="ad-footer-bottom">
+      <small>© 2026 ADEWALE — Tous droits réservés</small>
+      <small>Fâ · Transmission · Sagesse</small>
+    </div>
+  </div>
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
