@@ -296,7 +296,7 @@
   #savoir .odu-glyph {
     aspect-ratio: 1;
     border: 1px solid var(--or);
-    background: rgba(92, 44, 22, 0.85); /* Opacité ajustée du marron */
+    background: rgba(92, 44, 22, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -799,7 +799,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 1.4, 6);
+camera.position.set(0, 1.4, 6); // Position Z fixe
 
 const plateau = new THREE.Group();
 scene.add(plateau);
@@ -918,18 +918,8 @@ window.addEventListener('resize', () => {
 });
 
 /* ============ SCROLL / GSAP ANIMATIONS ============ */
-gsap.to(camera.position, {
-  z: -6, y: 0.2,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#desequilibre',
-    start: 'top bottom',
-    end: 'bottom top',
-    scrub: 1
-  }
-});
 
-/* ROTATION DU PLATEAU SUR LUI-MÊME AU SCROLL (SANS AGRANDISSEMENT) */
+/* ROTATION DU PLATEAU SUR LUI-MÊME AU SCROLL (SANS AUCUN ZOOM) */
 gsap.to(plateau.rotation, {
   y: "+=" + (Math.PI * 4),
   ease: 'none',
@@ -941,6 +931,7 @@ gsap.to(plateau.rotation, {
   }
 });
 
+/* DISPARITION EN FONDU DU CANVAS DANS LES DERNIÈRES SECTIONS */
 gsap.to('#scene-canvas', {
   opacity: 0,
   ease: 'none',
@@ -1017,7 +1008,7 @@ const oduData = [
   {
     name: 'Ka-mêdji',
     symbol: 'La Prudence, la Stratégie & la Discrétion',
-    desc: 'Signe de la maîtrise de soi et de la prudence, Ka-mêdji enseigne la sérénité. Il protège contre la tromperie et invite à conserver la confidentialité sur ses futurs projets.',
+    desc: 'Signe de la maîtrise de soi et de la prudence, Ka-mêdji enseigne la sérénité. Il protecte contre la tromperie et invite à conserver la confidentialité sur ses futurs projets.',
     guidance: 'Faites preuve de discrétion et mûrissez vos plans à l\'abri des regards avant d\'agir.'
   },
   {
