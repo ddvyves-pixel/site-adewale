@@ -509,26 +509,29 @@
     }
     .reveal-char { opacity: 1 !important; transform: none !important; }
   }
-
-  /* ===== FOOTER ADEWALE ===== */
-  .ad-footer{background:#7a4328;color:#f8f5ee;margin-top:80px;border-top:3px solid #A9822E;padding:0 24px;}
-  .ad-footer-inner{width:min(1180px,100%);margin:auto;padding:58px 0 24px;}
-  .ad-footer-grid{display:grid;grid-template-columns:1.45fr 1fr 1fr 1fr;gap:46px;}
-  .ad-footer-brand{font-family:'Fraunces',serif;font-size:36px;letter-spacing:.04em;margin-bottom:20px;color:#f8f5ee;}
-  .ad-footer-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#e4bd69;font-weight:700;margin-bottom:16px;}
-  .ad-footer-column p,.ad-footer-column a,.ad-footer-column span{font-size:13px;line-height:1.8;color:rgba(248,245,238,.82);}
-  .ad-footer-column p{max-width:360px;}
-  .ad-footer-column a{text-decoration:none;display:block;transition:color .25s,transform .25s;}
-  .ad-footer-column a:hover{color:#fff;transform:translateX(3px);}
-  .ad-socials{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;}
-  .ad-socials a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;border:1px solid rgba(248,245,238,.25);border-radius:2px;color:#f8f5ee;transition:background .25s,border-color .25s,color .25s;transform:none!important;}
-  .ad-socials a:hover{background:rgba(248,245,238,.12);border-color:#e4bd69;color:#e4bd69;transform:none!important;}
-
-  .ad-footer-bottom{border-top:1px solid rgba(248,245,238,.2);margin-top:44px;padding-top:18px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-  .ad-footer-bottom small{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(248,245,238,.58);}
-  @media(max-width:900px){.ad-footer-grid{grid-template-columns:1fr 1fr;gap:34px;}}
-  @media(max-width:560px){.ad-footer{padding:0 20px;}.ad-footer-inner{padding-top:46px;}.ad-footer-grid{grid-template-columns:1fr;gap:30px;}.ad-footer-brand{font-size:30px;}.ad-footer-bottom{flex-direction:column;}}
 </style>
+
+<style>
+/* ===== FOOTER ADEWALE ===== */
+.ad-footer{background:#7a4328;color:#f8f5ee;margin-top:80px;border-top:3px solid #A9822E;padding:0 24px;}
+.ad-footer-inner{width:min(1180px,100%);margin:auto;padding:58px 0 24px;}
+.ad-footer-grid{display:grid;grid-template-columns:1.45fr 1fr 1fr 1fr;gap:46px;}
+.ad-footer-brand{font-family:'Fraunces',serif;font-size:36px;letter-spacing:.04em;margin-bottom:20px;color:#f8f5ee;}
+.ad-footer-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#e4bd69;font-weight:700;margin-bottom:16px;}
+.ad-footer-column p,.ad-footer-column a,.ad-footer-column span{font-size:13px;line-height:1.8;color:rgba(248,245,238,.82);}
+.ad-footer-column p{max-width:360px;}
+.ad-footer-column a{text-decoration:none;display:block;transition:color .25s,transform .25s;}
+.ad-footer-column a:hover{color:#fff;transform:translateX(3px);}
+.ad-socials{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;}
+.ad-socials a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;border:1px solid rgba(248,245,238,.25);border-radius:2px;color:#f8f5ee;transition:background .25s,border-color .25s,color .25s;transform:none!important;}
+.ad-socials a:hover{background:rgba(248,245,238,.12);border-color:#e4bd69;color:#e4bd69;transform:none!important;}
+
+.ad-footer-bottom{border-top:1px solid rgba(248,245,238,.2);margin-top:44px;padding-top:18px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.ad-footer-bottom small{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(248,245,238,.58);}
+@media(max-width:900px){.ad-footer-grid{grid-template-columns:1fr 1fr;gap:34px;}}
+@media(max-width:560px){.ad-footer{padding:0 20px;}.ad-footer-inner{padding-top:46px;}.ad-footer-grid{grid-template-columns:1fr;gap:30px;}.ad-footer-brand{font-size:30px;}.ad-footer-bottom{flex-direction:column;}}
+</style>
+
 </head>
 <body>
 
@@ -796,13 +799,10 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 1.4, 6);
+camera.position.set(0, 1.4, 6); // Position Z fixe
 
 const plateau = new THREE.Group();
 scene.add(plateau);
-
-// Plateau de secours 3D (Group dédié)
-const fallbackPlateauGroup = new THREE.Group();
 
 let ikinMesh = null;
 const dummy = new THREE.Object3D();
@@ -813,17 +813,13 @@ function buildFallbackPlateau() {
   const geo = new THREE.CylinderGeometry(2, 2.1, 0.15, 48);
   const mat = new THREE.MeshStandardMaterial({ color: 0x241F1A, roughness: 0.6, metalness: 0.1 });
   const mesh = new THREE.Mesh(geo, mat);
-  fallbackPlateauGroup.add(mesh);
+  plateau.add(mesh);
 
   const rimGeo = new THREE.TorusGeometry(2.05, 0.03, 16, 64);
   const rimMat = new THREE.MeshStandardMaterial({ color: 0xA9822E, roughness: 0.3, metalness: 0.5 });
   const rim = new THREE.Mesh(rimGeo, rimMat);
   rim.rotation.x = Math.PI / 2;
   mesh.add(rim);
-
-  // Masqué par défaut (Option 1)
-  fallbackPlateauGroup.visible = false;
-  plateau.add(fallbackPlateauGroup);
 }
 
 function buildFallbackIkin() {
@@ -833,11 +829,9 @@ function buildFallbackIkin() {
   scene.add(ikinMesh);
 }
 
-// Construction de la structure de secours en mémoire (masquée)
 buildFallbackPlateau();
 buildFallbackIkin();
 
-// Chargement GLTF avec fallback sur erreur
 if (typeof THREE.GLTFLoader === 'function') {
   try {
     const dracoLoader = new THREE.DRACOLoader();
@@ -858,22 +852,15 @@ if (typeof THREE.GLTFLoader === 'function') {
             n.material.side = THREE.DoubleSide;
           }
         });
-        // Modèle chargé avec succès : on conserve uniquement le modèle principal
-        fallbackPlateauGroup.visible = false;
+        plateau.clear();
         plateau.add(model);
       },
       undefined,
-      (error) => { 
-        console.warn('Échec du chargement GLTF. Activation du plateau de secours 3D.');
-        fallbackPlateauGroup.visible = true; // Révélation du plateau de secours si le fichier GLB échoue
-      }
+      () => { console.log('Utilisation du plateau de secours 3D.'); }
     );
   } catch(e) {
-    console.warn('Erreur GLTF Loader. Activation du plateau de secours 3D.');
-    fallbackPlateauGroup.visible = true;
+    console.log('Chargement GLTF ignoré.');
   }
-} else {
-  fallbackPlateauGroup.visible = true;
 }
 
 // Lumières
@@ -931,6 +918,8 @@ window.addEventListener('resize', () => {
 });
 
 /* ============ SCROLL / GSAP ANIMATIONS ============ */
+
+/* ROTATION DU PLATEAU SUR LUI-MÊME AU SCROLL (SANS AUCUN ZOOM) */
 gsap.to(plateau.rotation, {
   y: "+=" + (Math.PI * 4),
   ease: 'none',
@@ -942,6 +931,7 @@ gsap.to(plateau.rotation, {
   }
 });
 
+/* DISPARITION EN FONDU DU CANVAS DANS LES DERNIÈRES SECTIONS */
 gsap.to('#scene-canvas', {
   opacity: 0,
   ease: 'none',
@@ -953,7 +943,7 @@ gsap.to('#scene-canvas', {
   }
 });
 
-/* ============ BASE DE DONNÉES DES 16 SIGNES ============ */
+/* ============ BASE DE DONNÉES ET GESTION DES 16 SIGNES ============ */
 const oduData = [
   {
     name: 'Gbê-mêdji',
@@ -970,7 +960,7 @@ const oduData = [
   {
     name: 'Woli-mêdji',
     symbol: 'L\'Instinct, la Conscience & la Nature',
-    desc: 'Signe de la vision profonde et de l\'introspection, Woli-mêdji lie l\'être humain aux forces de la nature et à son intuition sacrée. Il symbolise le sound discernment face aux illusions du monde.',
+    desc: 'Signe de la vision profonde et de l\'introspection, Woli-mêdji lie l\'être humain aux forces de la nature et à son intuition sacrée. Il symbolise le discernement face aux illusions du monde.',
     guidance: 'Faites confiance à votre instinct et prenez du recul pour voir la vérité derrière les apparences.'
   },
   {
@@ -1018,7 +1008,7 @@ const oduData = [
   {
     name: 'Ka-mêdji',
     symbol: 'La Prudence, la Stratégie & la Discrétion',
-    desc: 'Signe de la maîtrise de soi et de la prudence, Ka-mêdji enseigne la sérénité. Il protège contre la tromperie et invite à conserver la confidentialité sur ses futurs projets.',
+    desc: 'Signe de la maîtrise de soi et de la prudence, Ka-mêdji enseigne la sérénité. Il protecte contre la tromperie et invite à conserver la confidentialité sur ses futurs projets.',
     guidance: 'Faites preuve de discrétion et mûrissez vos plans à l\'abri des regards avant d\'agir.'
   },
   {
@@ -1056,33 +1046,31 @@ const oduData = [
 /* ============ GÉNÉRATION DES BOUTONS DE LA CONSTELLATION ============ */
 const constellation = document.getElementById('constellation');
 
-if (constellation) {
-  oduData.forEach(item => {
-    const btn = document.createElement('button');
-    btn.className = 'odu-glyph js-magnetic';
-    btn.setAttribute('type', 'button');
-    btn.setAttribute('aria-label', `Découvrir le signe ${item.name}`);
-    btn.textContent = item.name;
+oduData.forEach(item => {
+  const btn = document.createElement('button');
+  btn.className = 'odu-glyph';
+  btn.setAttribute('type', 'button');
+  btn.setAttribute('aria-label', `Découvrir le signe ${item.name}`);
+  btn.textContent = item.name;
 
-    btn.addEventListener('click', () => {
-      openOduModal(item);
-    });
-
-    constellation.appendChild(btn);
+  btn.addEventListener('click', () => {
+    openOduModal(item);
   });
 
-  gsap.to('#savoir .odu-glyph', {
-    opacity: 1,
-    y: 0,
-    duration: 0.5,
-    stagger: 0.04,
-    ease: 'power2.out',
-    scrollTrigger: {
-      trigger: '#savoir',
-      start: 'top 65%'
-    }
-  });
-}
+  constellation.appendChild(btn);
+});
+
+gsap.to('#savoir .odu-glyph', {
+  opacity: 1,
+  y: 0,
+  duration: 0.5,
+  stagger: 0.04,
+  ease: 'power2.out',
+  scrollTrigger: {
+    trigger: '#savoir',
+    start: 'top 65%'
+  }
+});
 
 /* ============ GESTION DE LA FENÊTRE MODALE ============ */
 const modal = document.getElementById('odu-modal');
