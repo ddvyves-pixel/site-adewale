@@ -768,9 +768,11 @@ for(let i = 0; i < 16; i++){
   track.appendChild(m);
 }
 
-let loaded = 0;
 const marks = document.querySelectorAll('.odu-mark');
-function fakeLoad(){
+let isModelReady = false;
+
+function finishLoading() {
+  let loaded = 0;
   const interval = setInterval(() => {
     loaded++;
     if(marks[loaded-1]) marks[loaded-1].classList.add('lit');
@@ -787,9 +789,8 @@ function fakeLoad(){
         }
       });
     }
-  }, 50);
+  }, 30);
 }
-window.addEventListener('load', fakeLoad);
 
 /* ============ SCÈNE 3D : PLATEAU DE FÂ ============ */
 const canvas = document.getElementById('scene-canvas');
@@ -799,7 +800,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 1.4, 6); // Position Z fixe
+camera.position.set(0, 1.4, 6);
 
 const plateau = new THREE.Group();
 scene.add(plateau);
@@ -809,28 +810,14 @@ const dummy = new THREE.Object3D();
 const ikinCount = 16;
 const ikinRadius = 2.4;
 
-function buildFallbackPlateau() {
-  const geo = new THREE.CylinderGeometry(2, 2.1, 0.15, 48);
-  const mat = new THREE.MeshStandardMaterial({ color: 0x241F1A, roughness: 0.6, metalness: 0.1 });
-  const mesh = new THREE.Mesh(geo, mat);
-  plateau.add(mesh);
-
-  const rimGeo = new THREE.TorusGeometry(2.05, 0.03, 16, 64);
-  const rimMat = new THREE.MeshStandardMaterial({ color: 0xA9822E, roughness: 0.3, metalness: 0.5 });
-  const rim = new THREE.Mesh(rimGeo, rimMat);
-  rim.rotation.x = Math.PI / 2;
-  mesh.add(rim);
-}
-
-function buildFallbackIkin() {
+function buildIkin() {
   const geo = new THREE.SphereGeometry(0.06, 12, 12);
   const mat = new THREE.MeshStandardMaterial({ color: 0xDAD4C6, roughness: 0.4 });
   ikinMesh = new THREE.InstancedMesh(geo, mat, ikinCount);
   scene.add(ikinMesh);
 }
 
-buildFallbackPlateau();
-buildFallbackIkin();
+buildIkin();
 
 if (typeof THREE.GLTFLoader === 'function') {
   try {
@@ -854,13 +841,22 @@ if (typeof THREE.GLTFLoader === 'function') {
         });
         plateau.clear();
         plateau.add(model);
+        
+        // Retrait du préchargeur une fois le modèle 3D injecté
+        finishLoading();
       },
       undefined,
-      () => { console.log('Utilisation du plateau de secours 3D.'); }
+      (err) => { 
+        console.error('Erreur lors du chargement du fichier 3D :', err); 
+        finishLoading(); // Cache le loader en cas d'erreur
+      }
     );
   } catch(e) {
-    console.log('Chargement GLTF ignoré.');
+    console.error('Chargement GLTF ignoré :', e);
+    finishLoading();
   }
+} else {
+  finishLoading();
 }
 
 // Lumières
@@ -1002,7 +998,7 @@ const oduData = [
   {
     name: 'Sa-mêdji',
     symbol: 'L\'Air, la Spiritualité & la Liberté',
-    desc: 'Lié aux esprits du vent et à l\'élévation spirituelle, Sa-mêdji libère des entraves. Il favorise l\'intuition fine, le mouvement de l\'esprit et les transformations intérieures.',
+    desc: 'Lié aux esprits du vent et à l\'élévation spirituelle, Sa-mêdji libère des entraves. Il favorise l\'intuition fine, le mouvement de l'esprit et les transformations intérieures.',
     guidance: 'Laissez aller ce qui ne vous sert plus et ouvrez-vous aux inspirations subtiles.'
   },
   {
